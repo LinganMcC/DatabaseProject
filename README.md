@@ -2,7 +2,16 @@
 
 The purpose of this submission is to provide evidence of your work during this semester. It includes both the process and the deliverables.
 
-> [Microsoft Naming Convention](<https://learn.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms124438(v=sql.100)?redirectedfrom=MSDN>) You must follow
+> **_Naming and styling convention you must follow:_**
+>
+> - Object names are easily understood
+> - Table names are not pluralized ("User" table not "Users")
+> - Abbreviations are few, but allowed (i.e. Qty, Amt, etc.)
+> - PascalCase used exclusively with the exception of certain column names (i.e. rowguid)
+> - No underscores
+> - Certain keywords are allowed (i.e. Name)
+> - Stored procedures are prefaced with "usp"
+> - Functions are prefaced with "ufn"
 
 ## Unit Learning Outcomes
 

@@ -2,6 +2,8 @@
 
 The purpose of this submission is to provide evidence of your work during this semester. It includes both the process and the deliverables.
 
+> [Microsoft Naming Convention](<https://learn.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms124438(v=sql.100)?redirectedfrom=MSDN>) You must follow
+
 ## Unit Learning Outcomes
 
 1. Acquire basic knowledge independently about the selection of suitable database technology as well as the design of databases according to relational and NoSQL principles.

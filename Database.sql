@@ -1,15 +1,8 @@
--- LIAM SECTION --
-
--- EWAN SECTION -- 
-
--- HOANG SECTION --
-hehe
--- SHRIYANS SECTION --
 CREATE TABLE Archer (
     ArcherID int PRIMARY KEY,
-    firstName varChar,
-    lastName varChar,
-    Gender VarChar,
+    FirstName varChar,
+    LastName varChar,
+    Gender varChar,
     DOB date,
     DefaultEquipmentID int,
     ClubID int
@@ -97,4 +90,3 @@ CREATE TABLE Arrow (
     EndID int,
     Score int
 );
--- EUGENE SECTION -- 

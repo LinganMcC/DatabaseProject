@@ -2,7 +2,7 @@
 
 The purpose of this submission is to provide evidence of your work during this semester. It includes both the process and the deliverables.
 
-> **_Naming and styling convention you must follow:_**
+> **_Naming convention you must follow:_**
 >
 > - Object names are easily understood
 > - Table names are not pluralized ("User" table not "Users")

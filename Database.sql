@@ -1,5 +1,3 @@
--- Create tables in correct dependency order
-
 -- Club table
 CREATE TABLE Club (
     ClubID INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,8 +83,10 @@ CREATE TABLE RoundScore (
     ArcherID INT NOT NULL,
     BaseRoundID INT NOT NULL,
     IsApproved BOOLEAN DEFAULT FALSE,
+    EquipmentID INT NOT NULL,
     `Date` DATE NOT NULL,
     `Time` TIME NOT NULL,
+    FOREIGN KEY (EquipmentID) REFERENCES EquipmentID(EquipmentID),
     FOREIGN KEY (CompetitionID) REFERENCES Competition(CompetitionID),
     FOREIGN KEY (ArcherID) REFERENCES Archer(ArcherID),
     FOREIGN KEY (BaseRoundID) REFERENCES BaseRound(BaseRoundID)

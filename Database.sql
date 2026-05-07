@@ -43,8 +43,8 @@ CREATE TABLE Class (
 -- Archer table
 CREATE TABLE Archer (
     ArcherID INT AUTO_INCREMENT PRIMARY KEY,
-    firstName VARCHAR(100) NOT NULL,
-    lastName VARCHAR(100) NOT NULL,
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
     Gender VARCHAR(10),
     DOB DATE,
     DefaultEquipmentID INT,
@@ -76,7 +76,7 @@ CREATE TABLE JunctionRoundRange (
     FOREIGN KEY (RangeID) REFERENCES RangeType(RangeID)
 );
 
---  
+--
 CREATE TABLE RoundScore (
     ScoreID INT AUTO_INCREMENT PRIMARY KEY,
     CompetitionID INT,

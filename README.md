@@ -35,3 +35,41 @@ The purpose of this submission is to provide evidence of your work during this s
     - Team reflection (4L Retrospective Links to an external site.) (Week 12)
     - Task management (all weeks)
     - Meeting minutes (all weeks)
+
+# Checklist
+
+## Archer Requirements
+
+- History
+    - [ ] View History score listing over time.
+    - [ ] Filter scores by date range and round type.
+    - [ ] Sort listings by date and score.
+- Lookup
+    - [ ] The Archers Personal Best (PB) for specific rounds.
+    - [ ] The club's overall best score for a round and the record holder.
+    - [ ] Round definitions (Distances, ends, target faces).
+    - [ ] Find equivalent rounds.
+- Competitions
+    - [ ] View club competition results (placings, arrow totals, scores).
+    - [ ] View yearly club championship results and identify winners.
+- [ ] Stage scores by using the hand held device.
+
+## Recorder Requirements
+
+- Setup
+    - [ ] Enter and configure new archers into the system.
+    - [ ] Define new rounds and setup upcoming competitions.
+    - [ ] Flag which specific scores qualify for standard competitions vs club championships.
+- Score Management
+    - [ ] Review and add new scores staged by archers.
+    - [ ] Approve practice scores by verifying the staged equipment matches the recorded equipment.
+
+## System and Data Requirement
+
+- [x] Classifications: Store standard age, gender and bow division.
+- [x] Range Configuration: Defines valid distances (excluding 80m) and target faces.
+- [x] Arrow Scoring: Record individual and recorder arrow values.
+- [x] End Tracking: Store sets of 6 arrows, ordered highest to lowest, mapped to a position within a round.
+- [x] Round Definitions: Store historical and current valid date ranges. Round info: number of Ends and equivalent round mapping.
+- [x] Archer Accounts: Store core identity (name, age, gender) and default equipment preferences.
+- [x] Score Staging: Archers append their competition entry containing: date, time, round, and equipment, while the recorder adds their recorded score for comparison.

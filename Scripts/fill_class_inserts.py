@@ -1,57 +1,41 @@
+#!/usr/bin/env python3
 """
-Archery Score Recording Database — Class table
-Generates and downloads class_inserts.sql with 16 INSERT statements.
-Run in Google Colab: the file will be saved and automatically downloaded.
+Generate INSERT statements for the Class table.
+These are the 16 standard Archery Australia age/gender classifications.
+The insertion order is shuffled each run so AUTO_INCREMENT IDs differ.
+Run:   python fill_class_inserts.py
+Output is printed to the console — copy/paste into phpMyAdmin.
 """
+import random
 
-# ── Class definitions (all 16 Archery Australia age/gender classes) ────────────
-# (Gender, MinAge, MaxAge)  — None stored as NULL in SQL
-classes = [
-    ("Female", 21, None),   # Female Open
-    ("Male",   21, None),   # Male Open
-    ("Female", 50, None),   # 50+ Female
-    ("Male",   50, None),   # 50+ Male
-    ("Female", 60, None),   # 60+ Female
-    ("Male",   60, None),   # 60+ Male
-    ("Female", 70, None),   # 70+ Female
-    ("Male",   70, None),   # 70+ Male
-    ("Female",  0, 20),     # Under 21 Female
-    ("Male",    0, 20),     # Under 21 Male
-    ("Female",  0, 17),     # Under 18 Female
-    ("Male",    0, 17),     # Under 18 Male
-    ("Female",  0, 15),     # Under 16 Female
-    ("Male",    0, 15),     # Under 16 Male
-    ("Female",  0, 13),     # Under 14 Female
-    ("Male",    0, 13),     # Under 14 Male
+# ── Configuration ──────────────────────────────────────────────────────────────
+# No count — these are the fixed Archery Australia classes.
+# ───────────────────────────────────────────────────────────────────────────────
+
+# (Gender, MinAge, MaxAge)
+# MaxAge 999 means no upper limit (open-ended class)
+CLASSES = [
+    ("Female", 21,  49),   # Open Women   (21-49, before Senior 50+)
+    ("Male",   21,  49),   # Open Men
+    ("Female", 50,  59),   # Senior 50+ Women
+    ("Male",   50,  59),   # Senior 50+ Men
+    ("Female", 60,  69),   # Senior 60+ Women
+    ("Male",   60,  69),   # Senior 60+ Men
+    ("Female", 70, 999),   # Senior 70+ Women
+    ("Male",   70, 999),   # Senior 70+ Men
+    ("Female", 18,  20),   # Junior Under 21 Women
+    ("Male",   18,  20),   # Junior Under 21 Men
+    ("Female", 15,  17),   # Junior Under 18 Women
+    ("Male",   15,  17),   # Junior Under 18 Men
+    ("Female", 13,  15),   # Junior Under 16 Women
+    ("Male",   13,  15),   # Junior Under 16 Men
+    ("Female",  0,  13),   # Junior Under 14 Women
+    ("Male",    0,  13),   # Junior Under 14 Men
 ]
 
-# ── Build INSERT statements ────────────────────────────────────────────────────
-insert_statements = []
-insert_statements.append("-- INSERT statements for the Class table")
-insert_statements.append("-- 16 rows (all Archery Australia age/gender classes)")
-insert_statements.append("")
+random.shuffle(CLASSES)
 
-for class_id, (gender, min_age, max_age) in enumerate(classes, start=1):
-    max_val = max_age if max_age is not None else "NULL"
-    insert_statements.append(
-        f"INSERT INTO Class (ClassID, Gender, MinAge, MaxAge) "
-        f"VALUES ({class_id}, '{gender}', {min_age}, {max_val});"
-    )
+rows = [f"('{gender}', {min_age}, {max_age})" for gender, min_age, max_age in CLASSES]
 
-# ── Write output ───────────────────────────────────────────────────────────────
-output_path = "class_inserts.sql"
-with open(output_path, "w") as f:
-    f.write("\n".join(insert_statements))
-
-print(f"Successfully generated {len(classes)} INSERT statements at '{output_path}'")
-print("\nAll statements:")
-for stmt in insert_statements[3:]:
-    print(stmt)
-
-# ── Google Colab download ──────────────────────────────────────────────────────
-try:
-    from google.colab import files  # type: ignore
-    files.download(output_path)
-    print("\nDownload triggered.")
-except ImportError:
-    print("\n(Not running in Colab — file saved locally.)")
+print("INSERT INTO Class (Gender, MinAge, MaxAge) VALUES")
+print(",\n".join(f"  {r}" for r in rows) + ";")

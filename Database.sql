@@ -11,6 +11,7 @@ CREATE TABLE EquipmentType (
     DivisionCode VARCHAR(50)
 );
 
+
 -- Championship table
 CREATE TABLE Championship (
     ChampionshipID INT AUTO_INCREMENT PRIMARY KEY,

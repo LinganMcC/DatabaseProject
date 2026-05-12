@@ -2,6 +2,7 @@
 """
 Generate random INSERT statements for the BaseRound table.
 Produces a realistic mix of WA, national, and local Australian rounds.
+Includes explicit BaseRoundID values for consistency.
 Run:   python fill_baseround_inserts.py
 Output is printed to the console — copy/paste into phpMyAdmin.
 """
@@ -36,7 +37,8 @@ pool = WA_ROUNDS + AUSTRALIAN_ROUNDS + INDOOR_ROUNDS
 random.shuffle(pool)
 selected = list(dict.fromkeys(pool))[:NUM_RECORDS]
 
-rows = [f"('{name}')" for name in selected]
+# Assign sequential IDs starting from 1
+rows = [f"({i+1}, '{name}')" for i, name in enumerate(selected)]
 
-print("INSERT INTO BaseRound (RoundName) VALUES")
+print("INSERT INTO BaseRound (BaseRoundID, RoundName) VALUES")
 print(",\n".join(f"  {r}" for r in rows) + ";")

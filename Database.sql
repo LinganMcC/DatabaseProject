@@ -87,7 +87,7 @@ CREATE TABLE RoundScore (
     EquipmentID INT NOT NULL,
     `Date` DATE NOT NULL,
     `Time` TIME NOT NULL,
-    FOREIGN KEY (EquipmentID) REFERENCES EquipmentID(EquipmentID),
+    FOREIGN KEY (EquipmentID) REFERENCES EquipmentType(EquipmentID),
     FOREIGN KEY (CompetitionID) REFERENCES Competition(CompetitionID),
     FOREIGN KEY (ArcherID) REFERENCES Archer(ArcherID),
     FOREIGN KEY (BaseRoundID) REFERENCES BaseRound(BaseRoundID)

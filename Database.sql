@@ -1,3 +1,10 @@
+-- Removing if exists
+DROP DATABASE IF EXISTS archer_database;
+CREATE DATABASE archer_database;
+
+-- Create new database
+USE archer_database;
+
 -- Club table
 CREATE TABLE Club (
     ClubID INT AUTO_INCREMENT PRIMARY KEY,

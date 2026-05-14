@@ -1,3 +1,6 @@
+# Make sure when executing, the terminal directory is relative to this script and all
+# other fill scripts. It won't work otherwise.
+
 import subprocess
 
 order = [

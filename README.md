@@ -12,6 +12,22 @@ The purpose of this submission is to provide evidence of your work during this s
 > - Certain keywords are allowed (i.e. Name)
 > - Stored procedures are prefaced with "usp"
 > - Functions are prefaced with "ufn"
+>
+> **_Aliases:_**
+>
+> - Club = cl
+> - EquipmentType = eqt
+> - ChampionShip = chp
+> - BaseRound = br
+> - RangeType = r
+> - Class = c
+> - Archer = a
+> - Competition = cmp
+> - JunctionRoundRange = jrr
+> - RoundScore = rs
+> - End = e
+> - Arrow = ar
+> - EquivalentRound = eqr
 
 ## Unit Learning Outcomes
 
@@ -41,7 +57,7 @@ The purpose of this submission is to provide evidence of your work during this s
 ## Archer Requirements
 
 - History
-    - [ ] View History score listing over time.
+    - [x] View History score listing over time.
     - [ ] Filter scores by date range and round type.
     - [ ] Sort listings by date and score.
 - Lookup

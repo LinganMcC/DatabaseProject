@@ -34,7 +34,7 @@ for file in order:
         continue
 
     out.write(f"-- {file}:\n{result.stdout}\n\n")
-    print(f"Finished\t`py {file}`...")
+    print(f"Finished\t`{python} {file}`...")
 
 out.close()
 

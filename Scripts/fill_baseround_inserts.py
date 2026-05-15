@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 """
 Generate random INSERT statements for the BaseRound table.
-Produces a realistic mix of WA, national, and local Australian rounds.
+Count is pulled from fill_archer_inserts.NUM_BASE_ROUNDS so BaseRoundIDs
+match the range used by Competition / RoundScore / EquivalentRound /
+JunctionRoundRange scripts.
 Run:   python fill_baseround_inserts.py
-Output is printed to the console — copy/paste into phpMyAdmin.
 """
 import random
-
-# ── Configuration ──────────────────────────────────────────────────────────────
-NUM_RECORDS = 25
-# ───────────────────────────────────────────────────────────────────────────────
+from fill_archer_inserts import NUM_BASE_ROUNDS
 
 WA_ROUNDS = [
     "WA1440", "WA900", "WA70", "WA60", "WA50+/30",
@@ -34,7 +32,7 @@ INDOOR_ROUNDS = [
 
 pool = WA_ROUNDS + AUSTRALIAN_ROUNDS + INDOOR_ROUNDS
 random.shuffle(pool)
-selected = list(dict.fromkeys(pool))[:NUM_RECORDS]
+selected = list(dict.fromkeys(pool))[:NUM_BASE_ROUNDS]
 
 rows = [f"('{name}')" for name in selected]
 

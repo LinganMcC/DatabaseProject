@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
 Generate random INSERT statements for the Championship table.
+Count is pulled from fill_archer_inserts.NUM_CHAMPIONSHIPS so the IDs
+line up with the Competition.ChampionshipID range.
 Run:   python fill_championship_inserts.py
-Output is printed to the console — copy/paste into phpMyAdmin.
 """
 import random
+from fill_archer_inserts import NUM_CHAMPIONSHIPS
 
-# ── Configuration ──────────────────────────────────────────────────────────────
-NUM_RECORDS = 40
-YEAR_MIN    = 2000
-YEAR_MAX    = 2025
-# ───────────────────────────────────────────────────────────────────────────────
+YEAR_MIN = 2000
+YEAR_MAX = 2025
 
 TYPES   = ["Club", "State", "Regional", "National", "Open", "Youth", "Masters", "Indoor"]
 STATES  = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"]
 SEASONS = ["Summer", "Winter", "Spring", "Autumn"]
+
 
 def random_name():
     style = random.randint(0, 3)
@@ -27,8 +27,9 @@ def random_name():
     else:
         return f"{random.choice(TYPES)} Archery Open"
 
+
 rows = []
-for _ in range(NUM_RECORDS):
+for _ in range(NUM_CHAMPIONSHIPS):
     name = random_name().replace("'", "''")
     year = random.randint(YEAR_MIN, YEAR_MAX)
     rows.append(f"('{name}', {year})")

@@ -1,40 +1,31 @@
 #!/usr/bin/env python3
 """
 Generate random INSERT statements for the EquivalentRound table.
-Maps which actual round a class/equipment combination shoots as an
-equivalent to a base round, with historical validity date ranges.
-ValidTo is nullable (NULL = currently valid).
+ID ranges are pulled from fill_archer_inserts so every FK lands inside
+a row that actually exists.
 Run:   python fill_equivalentround_inserts.py
-Output is printed to the console — copy/paste into phpMyAdmin.
-
-IMPORTANT — set the ID ranges below to match what is already in your database.
 """
 import random
 from datetime import date, timedelta
+from fill_archer_inserts import (
+    NUM_BASE_ROUNDS, NUM_CLASSES, NUM_EQUIPMENT, NUM_EQUIVALENT_ROUNDS,
+)
 
-# ── Configuration ──────────────────────────────────────────────────────────────
-NUM_RECORDS       = 30
-BASE_ROUND_ID_MIN = 1
-BASE_ROUND_ID_MAX = 25
-CLASS_ID_MIN      = 1
-CLASS_ID_MAX      = 16
-EQUIPMENT_ID_MIN  = 1
-EQUIPMENT_ID_MAX  = 5
 STILL_VALID_CHANCE = 0.5   # probability ValidTo is NULL (mapping still active)
-# ───────────────────────────────────────────────────────────────────────────────
+
 
 def random_date(start, end):
     return start + timedelta(days=random.randint(0, (end - start).days))
 
+
 rows = []
-for _ in range(NUM_RECORDS):
-    base_round   = random.randint(BASE_ROUND_ID_MIN, BASE_ROUND_ID_MAX)
-    # ActualRoundID must differ from BaseRoundID
+for _ in range(NUM_EQUIVALENT_ROUNDS):
+    base_round   = random.randint(1, NUM_BASE_ROUNDS)
     actual_round = random.choice(
-        [r for r in range(BASE_ROUND_ID_MIN, BASE_ROUND_ID_MAX + 1) if r != base_round]
+        [r for r in range(1, NUM_BASE_ROUNDS + 1) if r != base_round]
     )
-    class_id     = random.randint(CLASS_ID_MIN, CLASS_ID_MAX)
-    equip_id     = random.randint(EQUIPMENT_ID_MIN, EQUIPMENT_ID_MAX)
+    class_id     = random.randint(1, NUM_CLASSES)
+    equip_id     = random.randint(1, NUM_EQUIPMENT)
     valid_from   = random_date(date(2000, 1, 1), date(2020, 1, 1))
     if random.random() < STILL_VALID_CHANCE:
         valid_to = "NULL"

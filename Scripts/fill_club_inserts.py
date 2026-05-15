@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 """
 Generate random INSERT statements for the Club table.
+Count is pulled from fill_archer_inserts.NUM_CLUBS so ClubIDs match
+the range used by Archer / Competition inserts.
 Run:   python fill_club_inserts.py
-Output is printed to the console — copy/paste into phpMyAdmin.
 """
 import random
-
-# ── Configuration ──────────────────────────────────────────────────────────────
-NUM_RECORDS = 30
-# ───────────────────────────────────────────────────────────────────────────────
+from fill_archer_inserts import NUM_CLUBS
 
 CITIES = [
     "Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Canberra",
@@ -29,7 +27,7 @@ SUFFIXES = [
 ]
 
 names = set()
-while len(names) < NUM_RECORDS:
+while len(names) < NUM_CLUBS:
     names.add(f"{random.choice(CITIES)} {random.choice(SUFFIXES)}")
 
 rows = [f"('{name}')" for name in sorted(names)]

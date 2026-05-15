@@ -5,14 +5,15 @@ Count is pulled from fill_archer_inserts.NUM_CHAMPIONSHIPS so the IDs
 line up with the Competition.ChampionshipID range.
 Run:   python fill_championship_inserts.py
 """
+
 import random
 from fill_archer_inserts import NUM_CHAMPIONSHIPS
 
 YEAR_MIN = 2000
 YEAR_MAX = 2025
 
-TYPES   = ["Club", "State", "Regional", "National", "Open", "Youth", "Masters", "Indoor"]
-STATES  = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"]
+TYPES = ["Club", "State", "Regional", "National", "Open", "Youth", "Masters", "Indoor"]
+STATES = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"]
 SEASONS = ["Summer", "Winter", "Spring", "Autumn"]
 
 

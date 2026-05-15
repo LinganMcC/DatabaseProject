@@ -6,6 +6,7 @@ The end-count list is seeded in fill_archer_inserts so fill_arrow_inserts
 can reproduce the exact same EndID range.
 Run:   python fill_end_inserts.py
 """
+
 from fill_archer_inserts import ENDS_PER_SCORE
 
 rows = []

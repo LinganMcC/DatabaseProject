@@ -7,58 +7,52 @@ JunctionRoundRange scripts.
 Run:   python fill_baseround_inserts.py
 """
 
-import random
-from fill_archer_inserts import NUM_BASE_ROUNDS
-
-WA_ROUNDS = [
-    "WA1440",
-    "WA900",
-    "WA70",
-    "WA60",
-    "WA50+/30",
-    "WA25",
-    "WA18",
-    "WA3D",
-    "WA Field",
-    "Olympic Round",
-    "WA720",
+# See Here: https://archeryaustralia.app.box.com/s/79h2zc3q0bu8ks172rdbdpzg9kpdo2f6
+# Page 63-65
+BASE_ROUND_NAMES = [
+    # Blue
+    "WA90/1440",
+    "WA70/1440",
+    "WA60/1440",
+    "AA50/1440",
+    "AA40/1440",
+    # Green
+    "Long Sydney",
+    "Sydney",
+    "Long Brisbane",
+    "Brisbane",
+    "Adelaide",
+    "Short Adeliade",
+    # Yellow
+    "Hobart",
+    "Pert",
+    "48^Canberra WA60/900",
+    "Junior Canberra",
+    "49^Mini Canberra",
+    "Grange",
+    "Melbourne",
+    "Darwin",
+    "Geelong",
+    "Newcastle",
+    "Holt",
+    "Samford",
+    "Drake",
+    # Bronze
+    "Wollongong",
+    "Townsville",
+    "Launceston",
+    # Grey NOT SUPPORTED
+    # "WA70/720",
+    # "WA60/720",
+    # "WA50/720",
+    # "WA50/720 50^WABB50/720",
+    # "WA40/720",
+    # "WA30/720",
+    # "WA20/720",
+    # "WA20/720",
+    # "VI Outdoor^52",
+    # "VI 30m Round^53",
 ]
-
-AUSTRALIAN_ROUNDS = [
-    "Sydney Round",
-    "Melbourne Round",
-    "Adelaide Round",
-    "Brisbane Round",
-    "Perth Round",
-    "Canberra Round",
-    "Hobart Round",
-    "Darwin Round",
-    "National Round",
-    "State Round",
-    "Club Round",
-    "Short Metropolitan",
-    "Long Metropolitan",
-    "Short Junior",
-    "Long Junior",
-    "Half WA1440",
-    "Statewide Round",
-    "Regional Round",
-    "Frostbite Round",
-    "Clout Round",
-]
-
-INDOOR_ROUNDS = [
-    "18m Indoor Round",
-    "25m Indoor Round",
-    "WA18 Indoor",
-    "WA25 Indoor",
-]
-
-pool = WA_ROUNDS + AUSTRALIAN_ROUNDS + INDOOR_ROUNDS
-random.shuffle(pool)
-selected = list(dict.fromkeys(pool))[:NUM_BASE_ROUNDS]
-
-rows = [f"('{name}')" for name in selected]
 
 print("INSERT INTO BaseRound (RoundName) VALUES")
-print(",\n".join(f"  {r}" for r in rows) + ";")
+print(",\n".join(f"  ('{r}')" for r in BASE_ROUND_NAMES) + ";")

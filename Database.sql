@@ -101,7 +101,7 @@ CREATE TABLE RoundScore (
 );
 
 -- End table
-CREATE TABLE End (
+CREATE TABLE `End` (
     EndID INT AUTO_INCREMENT PRIMARY KEY,
     ScoreID INT NOT NULL,
     Position INT NOT NULL,

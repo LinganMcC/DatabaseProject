@@ -8,8 +8,6 @@ Run:   python fill_equipmenttype_inserts.py
 Output is printed to the console — copy/paste into phpMyAdmin.
 """
 
-import random
-
 # ── Configuration ──────────────────────────────────────────────────────────────
 # No count — these are the fixed Archery Australia divisions.
 # ───────────────────────────────────────────────────────────────────────────────
@@ -22,9 +20,5 @@ EQUIPMENT = [
     ("Longbow", "LBW"),
 ]
 
-random.shuffle(EQUIPMENT)
-
-rows = [f"('{name}', '{code}')" for name, code in EQUIPMENT]
-
 print("INSERT INTO EquipmentType (Name, DivisionCode) VALUES")
-print(",\n".join(f"  {r}" for r in rows) + ";")
+print(",\n".join(f"  ('{name}', '{code}')" for (name, code) in EQUIPMENT) + ";")

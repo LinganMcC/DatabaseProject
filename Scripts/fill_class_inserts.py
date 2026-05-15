@@ -7,8 +7,6 @@ Run:   python fill_class_inserts.py
 Output is printed to the console — copy/paste into phpMyAdmin.
 """
 
-import random
-
 # ── Configuration ──────────────────────────────────────────────────────────────
 # No count — these are the fixed Archery Australia classes.
 # ───────────────────────────────────────────────────────────────────────────────
@@ -33,8 +31,6 @@ CLASSES = [
     ("Female", 0, 13),  # Junior Under 14 Women
     ("Male", 0, 13),  # Junior Under 14 Men
 ]
-
-random.shuffle(CLASSES)
 
 rows = [f"('{gender}', {min_age}, {max_age})" for gender, min_age, max_age in CLASSES]
 

@@ -2,6 +2,7 @@
 # other fill scripts. It won't work otherwise.
 
 import subprocess
+import sys
 
 order = [
     "./fill_class_inserts.py",
@@ -22,11 +23,12 @@ order = [
 out_name = "output.sql"
 out = open(out_name, "w")
 assert out, "Failed to open file"
+python = sys.executable
 
 for file in order:
     print(f"Executing\t`py {file}`...")
 
-    result = subprocess.run(["py", file], capture_output=True, text=True)
+    result = subprocess.run([python, file], capture_output=True, text=True)
     if result.returncode != 0:
         print(f"Failed: {result.stdout}\n")
         continue

@@ -28,6 +28,17 @@ The purpose of this submission is to provide evidence of your work during this s
 > - End = e
 > - Arrow = ar
 > - EquivalentRound = eqr
+>
+> **_Variables in queries:_** Mark them using `-- EDIT VARIABLE HERE` to make it clear. Look in History, the first query for an example.
+
+## Data Generation
+
+1. Generate Database
+    - Copy Database.sql into myphpadmin or alternative and execute. This creates a the database with archer_database as its name. Refresh if it doesn't show immediately.
+2. Fill database with test data
+    1. Open terminal and navigate to `Scripts` folder. Make sure its the current working directory using `pwd` in terminal.
+    2. Execute all scripts `py execute_all.py` or `py execute_all.py 123` or any number, represents the number of archers to create. All other data scales based on archer count.
+    3. This outputs insert statements into `output.sql` file, copy and paste into myphpadmin or alternative and execute.
 
 ## Unit Learning Outcomes
 

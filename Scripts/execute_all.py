@@ -1,7 +1,20 @@
 #!/usr/bin/env python3
 """Executes all fill_NAME_inserts.py passing in relavent archer count
-Make sure when executing, the terminal directory is relative to this script and all
-other fill scripts. It won't work otherwise."""
+
+How to use:
+Set current working directory to the Scripts folder, check by using pwd in terminal, it
+should be in the Scripts folder.
+
+NOTE: The default __ARCHER_NUM_COUNT__ will be 50, can change by passing in a
+commandline argument
+
+Then execute using the following command:
+py ./execute_all.py
+or
+py ./execute_all.py __ARCHER_NUM_COUNT__
+
+If py doesn't work, make sure python is installed, otherwise it might be python3 or smth
+"""
 
 import subprocess
 import sys

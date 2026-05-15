@@ -18,7 +18,7 @@ ALL_COMBINATIONS = [
     (50, 80, 5),
     (60, 80, 5),
     (70, 80, 5),
-    (80, 80, 5),
+    (80, 80, 5),  # 80m Not used but keep for database purpose
     (90, 80, 5),
     (10, 80, 6),  # 36+
     (20, 80, 6),

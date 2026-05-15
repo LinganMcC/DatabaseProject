@@ -2,9 +2,7 @@
 -- ------------------------------------------------------------------------------------------------
 -- Description...
 -- Technical description...
-select
-from competition c
-join roundscore rs on c.id = rs.competitionid
+
 -- View yearly club championship results and identify winners.
 -- ------------------------------------------------------------------------------------------------
 -- Description...

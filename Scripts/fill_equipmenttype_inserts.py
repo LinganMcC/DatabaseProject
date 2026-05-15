@@ -7,6 +7,7 @@ so AUTO_INCREMENT IDs differ between runs.
 Run:   python fill_equipmenttype_inserts.py
 Output is printed to the console — copy/paste into phpMyAdmin.
 """
+
 import random
 
 # ── Configuration ──────────────────────────────────────────────────────────────
@@ -14,11 +15,11 @@ import random
 # ───────────────────────────────────────────────────────────────────────────────
 
 EQUIPMENT = [
-    ("Recurve",          "REC"),
-    ("Compound",         "COM"),
-    ("Recurve Barebow",  "RBB"),
+    ("Recurve", "REC"),
+    ("Compound", "COM"),
+    ("Recurve Barebow", "RBB"),
     ("Compound Barebow", "CBB"),
-    ("Longbow",          "LBW"),
+    ("Longbow", "LBW"),
 ]
 
 random.shuffle(EQUIPMENT)

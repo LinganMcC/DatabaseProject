@@ -12,6 +12,33 @@ The purpose of this submission is to provide evidence of your work during this s
 > - Certain keywords are allowed (i.e. Name)
 > - Stored procedures are prefaced with "usp"
 > - Functions are prefaced with "ufn"
+>
+> **_Aliases:_**
+>
+> - Club = cl
+> - EquipmentType = eqt
+> - ChampionShip = chp
+> - BaseRound = br
+> - RangeType = r
+> - Class = c
+> - Archer = a
+> - Competition = cmp
+> - JunctionRoundRange = jrr
+> - RoundScore = rs
+> - End = e
+> - Arrow = ar
+> - EquivalentRound = eqr
+>
+> **_Variables in queries:_** Mark them using `-- EDIT VARIABLE HERE` to make it clear. Look in History, the first query for an example.
+
+## Data Generation
+
+1. Generate Database
+    - Copy Database.sql into myphpadmin or alternative and execute. This creates a the database with archer_database as its name. Refresh if it doesn't show immediately.
+2. Fill database with test data
+    1. Open terminal and navigate to `Scripts` folder. Make sure its the current working directory using `pwd` in terminal.
+    2. Execute all scripts `py execute_all.py` or `py execute_all.py 123` or any number, represents the number of archers to create. All other data scales based on archer count.
+    3. This outputs insert statements into `output.sql` file, copy and paste into myphpadmin or alternative and execute.
 
 ## Unit Learning Outcomes
 
@@ -41,7 +68,7 @@ The purpose of this submission is to provide evidence of your work during this s
 ## Archer Requirements
 
 - History
-    - [ ] View History score listing over time.
+    - [x] View History score listing over time.
     - [ ] Filter scores by date range and round type.
     - [ ] Sort listings by date and score.
 - Lookup

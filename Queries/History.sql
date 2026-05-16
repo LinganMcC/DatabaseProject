@@ -1,6 +1,8 @@
 -- ------------------------------------------------------------------------------------------------
 -- View History score listing over time.
 -- ------------------------------------------------------------------------------------------------
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--
 -- Collects the total score of each round linked to a specific archer ID.
 --
 -- Collects all arrows and sums up the total using SUM(), COALESCE() returns the first  non-null
@@ -36,6 +38,10 @@ ORDER BY
 -- ------------------------------------------------------------------------------------------------
 -- Filter scores by date, range and round type.
 -- ------------------------------------------------------------------------------------------------
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--
+-- Collects all the archers scores for each round they have competed in and filters by date, range
+-- and round type.
 SELECT
     a.FirstName,
     a.LastName,
@@ -74,6 +80,8 @@ ORDER BY
 -- ------------------------------------------------------------------------------------------------
 -- Sort listings by date and score.
 -- ------------------------------------------------------------------------------------------------
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--
 -- Collects all rounds an archer has participated in and orders based on the total score and date
 SELECT
     a.FirstName,

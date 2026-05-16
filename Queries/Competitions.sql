@@ -1,9 +1,24 @@
 -- ------------------------------------------------------------------------------------------------
 -- View club competition results (placings, arrow totals, scores).
 -- ------------------------------------------------------------------------------------------------
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--          - Eugene Tan    105334351@student.swin.edu.au
+--
+-- Shows the top ranking participants of every competition while ordering by date. There are two
+-- options, showing all participants or only the top 3 performing archers (see HOW TO USE to
+-- select between the two options).
+--
+-- HOW TO USE:
+--  | 1. Copy CTE (Entire WITH query) and paste at the top within phpmyadmin SQL
+--  | 2. Select Either one of the following queries and paste under CTE query (see below)
+--  |    - OPT 1: See all results query
+--  |    - OPT 2: See top 3 ranks only query
+--
+-- Technical Info:
 -- RANK() -> Orders and provides a ranking based on the ORDER BY. PARTITION BY divides the reuslt
 --           into groups and ranks rows independently within each group
 --           More Info: https://www.geeksforgeeks.org/sql/rank-function-in-sql-server/
+--
 -- WITH   -> (Common Table Expression (CTE)) Basically defines a function/macro that you can reuse
 --           within other queries. It kinda creates a new tempory table result set where its
 --           lifetime exists only for the duration of the entire collection of queries.
@@ -13,12 +28,6 @@
 --           using this, also don't add a semi-colon as its a syntax error.
 --           When providing parameters `WIDTH Name (param1...) AS (...);`  then you add semi-colon
 --           as its more generic.
---
--- HOW TO USE:
---  | 1. Copy CTE (Entire WITH query) and paste at the top within phpmyadmin SQL
---  | 2. Select Either one of the following queries and paste under CTE query (see below)
---  |    - OPT 1: See all results query
---  |    - OPT 2: See top 3 ranks only query
 WITH CompetitionRankedResult AS (
     SELECT
         cl.Name AS ClubName,                    -- Club and Competition details
@@ -60,40 +69,37 @@ WITH CompetitionRankedResult AS (
         a.LastName
 )
 
--- OPT 2: See top 3 ranks only query
-SELECT
-    cte.ClubName,
-    cte.CompetitionName,
-    cte.CompetitionDate,
-    cte.RankPlacing,
-    cte.FirstName,
-    cte.LastName,
-    cte.HighestScoreResult,
-    cte.TotalArrowsShot
-FROM CompetitionRankedResult cte
-WHERE
-    cte.RankPlacing <= 3
-ORDER BY
-    cte.CompetitionID   DESC,
-    cte.CompetitionDate DESC,
-    cte.RankPlacing     ASC;
-
 -- OPT 1: See all results query
 SELECT
-    cte.ClubName,
-    cte.CompetitionName,
-    cte.CompetitionDate,
-    cte.RankPlacing,
-    cte.FirstName,
-    cte.LastName,
-    cte.HighestScoreResult,
-    cte.TotalArrowsShot
-FROM CompetitionRankedResult cte
+    ClubName,
+    CompetitionName,
+    CompetitionDate,
+    RankPlacing,
+    FirstName,
+    LastName,
+    HighestScoreResult,
+    TotalArrowsShot
+FROM CompetitionRankedResult
 ORDER BY
-    cte.CompetitionID   DESC,
-    cte.CompetitionDate DESC,
-    cte.RankPlacing     ASC;
+    CompetitionDate DESC,
+    RankPlacing     ASC;
 
+-- OPT 2: See top 3 ranks only query
+SELECT
+    ClubName,
+    CompetitionName,
+    CompetitionDate,
+    RankPlacing,
+    FirstName,
+    LastName,
+    HighestScoreResult,
+    TotalArrowsShot
+FROM CompetitionRankedResult
+WHERE
+    RankPlacing <= 3
+ORDER BY
+    CompetitionDate DESC,
+    RankPlacing     ASC;
 
 -- ------------------------------------------------------------------------------------------------
 -- View yearly club championship results and identify winners.

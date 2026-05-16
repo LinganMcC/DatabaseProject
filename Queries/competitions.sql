@@ -22,6 +22,7 @@ where rs.IsApproved = 1
 group by cmp.CompetitionID, a.ArcherID, cl.ClubID, br.BaseRoundID, cmp.CompetitionDate
 
 
+
 -- View yearly club championship results and identify winners.
 -- ------------------------------------------------------------------------------------------------
 -- Description...

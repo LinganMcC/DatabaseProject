@@ -68,5 +68,27 @@ ORDER BY
 
 -- Sort listings by date and score.
 -- ------------------------------------------------------------------------------------------------
--- Description...
--- Technical description...
+-- Collects all rounds an archer has participated in and orders based on the total score and date
+SELECT
+    a.FirstName,
+    a.LastName,
+    COALESCE(SUM(ar.Score), 0) AS TotalScore,
+    br.RoundName,
+    rs.`Date`
+FROM RoundScore rs
+JOIN Archer a ON a.ArcherID = rs.ArcherID
+JOIN BaseRound br ON br.BaseRoundID= rs.BaseRoundID
+JOIN JunctionRoundRange jrr ON jrr.BaseRoundID = br.BaseRoundID
+JOIN RangeType r ON r.RangeID = jrr.RangeID
+LEFT JOIN `End` e ON e.ScoreID = rs.ScoreID
+LEFT JOIN Arrow ar ON ar.EndID = e.EndID
+WHERE -- EDIT VARIABLES HERE
+    a.ArcherID = 1
+GROUP BY
+    a.FirstName,
+    a.LastName,
+    br.RoundName,
+    rs.`Date`
+ORDER BY
+    TotalScore DESC,
+    rs.`Date` ASC;

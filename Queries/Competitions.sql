@@ -10,7 +10,10 @@ select
     a.LastName,
     cmp.CompetitionDate,
     sum(ar.Score) as TotalArrowScore,
-    count(ar.ArrowID) as TotalArrows
+    (SELECT SUM(r.NumberOfEnds * 6) 
+     FROM junctionroundrange jrr 
+     JOIN rangetype r ON jrr.RangeID = r.RangeID 
+     WHERE jrr.BaseRoundID = br.BaseRoundID) AS ExpectedArrows
 from Competition cmp
 join RoundScore rs on cmp.CompetitionID = rs.CompetitionID
 join Archer a on rs.ArcherID = a.ArcherID
@@ -20,6 +23,8 @@ join Club cl on cmp.ClubID = cl.ClubID
 join BaseRound br on rs.BaseRoundID = br.BaseRoundID
 where rs.IsApproved = 1
 group by cmp.CompetitionID, a.ArcherID, cl.ClubID, br.BaseRoundID, cmp.CompetitionDate
+
+
 -- View yearly club championship results and identify winners.
 -- ------------------------------------------------------------------------------------------------
 -- Description...

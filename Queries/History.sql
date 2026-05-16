@@ -23,6 +23,7 @@ LEFT JOIN Arrow ar  ON ar.EndID = e.EndID
 WHERE -- EDIT VARIABLE HERE
     rs.ArcherID = 1
 GROUP BY
+    a.ArcherID, -- Distinguish between archers with the same name
     a.FirstName,
     a.LastName,
     rs.`Date`,
@@ -57,6 +58,7 @@ WHERE -- EDIT VARIABLES HERE
     AND r.DistanceToTargetM = 90
     AND br.RoundName = 'WA90/1440'
 GROUP BY
+    a.ArcherID, -- Distinguish between archers with the same name
     a.FirstName,
     a.LastName,
     br.RoundName,
@@ -89,6 +91,9 @@ LEFT JOIN Arrow ar          ON ar.EndID = e.EndID
 WHERE -- EDIT VARIABLES HERE
     a.ArcherID = 1
 GROUP BY
+    a.ArcherID, -- Distinguish between archers with the same name
+    a.FirstName,
+    a.LastName,
     rs.`Time`,
     rs.`Date`
 ORDER BY

@@ -1,3 +1,4 @@
+-- ------------------------------------------------------------------------------------------------
 -- The Archers Personal Best (PB) for specific rounds.
 -- ------------------------------------------------------------------------------------------------
 -- Finds the single highest total score an archer has ever shot for each round.
@@ -38,6 +39,7 @@ ORDER BY
     br.RoundName ASC;
 
 
+-- ------------------------------------------------------------------------------------------------
 -- The club's overall best score for a round and the record holder.
 -- ------------------------------------------------------------------------------------------------
 -- Finds the single highest approved score ever shot for each round across all archers,
@@ -79,6 +81,7 @@ ORDER BY
     ranked.TotalScore DESC;
 
 
+-- ------------------------------------------------------------------------------------------------
 -- Round definitions (Distances, ends, target faces).
 -- ------------------------------------------------------------------------------------------------
 -- Returns the full definition of a round: every range that makes it up,
@@ -104,6 +107,7 @@ ORDER BY
     jrr.RangePosition ASC;             -- show ranges in shooting order
 
 
+-- ------------------------------------------------------------------------------------------------
 -- Find equivalent rounds.
 -- ------------------------------------------------------------------------------------------------
 -- For a given base round (the Male Open reference round), returns every equivalent

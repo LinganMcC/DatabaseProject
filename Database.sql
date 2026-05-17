@@ -1,46 +1,39 @@
+-- ------------------------------------------------------------------------------------------------
+-- Clear Database if exists
+-- ------------------------------------------------------------------------------------------------
+
 -- Removing if exists
 DROP DATABASE IF EXISTS archer_database;
 CREATE DATABASE archer_database;
-
--- Create new database
 USE archer_database;
 
--- Club table
+-- ------------------------------------------------------------------------------------------------
+-- Core Foundational Tables (Every table below relys on these tables)
+-- ------------------------------------------------------------------------------------------------
+
 CREATE TABLE Club (
     ClubID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL
 );
 
--- EquipmentType table
 CREATE TABLE EquipmentType (
     EquipmentID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
     DivisionCode VARCHAR(50)
 );
 
-
--- Championship table
 CREATE TABLE Championship (
     ChampionshipID INT AUTO_INCREMENT PRIMARY KEY,
     ChampionshipName VARCHAR(255) NOT NULL,
     Year INT NOT NULL
 );
 
--- BaseRound table
 CREATE TABLE BaseRound (
     BaseRoundID INT AUTO_INCREMENT PRIMARY KEY,
     RoundName VARCHAR(255) NOT NULL
 );
 
--- Range table
-CREATE TABLE RangeType (
-    RangeID INT AUTO_INCREMENT PRIMARY KEY,
-    DistanceToTargetM INT NOT NULL,
-    TargetFaceCm INT NOT NULL,
-    NumberOfEnds INT NOT NULL
-);
 
--- Class table
 CREATE TABLE Class (
     ClassID INT AUTO_INCREMENT PRIMARY KEY,
     Gender VARCHAR(10),
@@ -48,7 +41,10 @@ CREATE TABLE Class (
     MaxAge INT NOT NULL
 );
 
--- Archer table
+-- ------------------------------------------------------------------------------------------------
+-- Archer and Competitions Tables (Secondary, a lot of tables still rely on this)
+-- ------------------------------------------------------------------------------------------------
+
 CREATE TABLE Archer (
     ArcherID INT AUTO_INCREMENT PRIMARY KEY,
     FirstName VARCHAR(100) NOT NULL,
@@ -61,7 +57,6 @@ CREATE TABLE Archer (
     FOREIGN KEY (ClubID) REFERENCES Club(ClubID)
 );
 
--- Competition table
 CREATE TABLE Competition (
     CompetitionID INT AUTO_INCREMENT PRIMARY KEY,
     BaseRoundID INT NOT NULL,
@@ -74,7 +69,17 @@ CREATE TABLE Competition (
     FOREIGN KEY (ChampionshipID) REFERENCES Championship(ChampionshipID)
 );
 
--- JunctionRoundRange table
+-- ------------------------------------------------------------------------------------------------
+-- Round Tables
+-- ------------------------------------------------------------------------------------------------
+
+CREATE TABLE RangeType (
+    RangeID INT AUTO_INCREMENT PRIMARY KEY,
+    DistanceToTargetM INT NOT NULL,
+    TargetFaceCm INT NOT NULL,
+    NumberOfEnds INT NOT NULL
+);
+
 CREATE TABLE JunctionRoundRange (
     BaseRoundID INT NOT NULL,
     RangeID INT NOT NULL,
@@ -84,7 +89,6 @@ CREATE TABLE JunctionRoundRange (
     FOREIGN KEY (RangeID) REFERENCES RangeType(RangeID)
 );
 
---
 CREATE TABLE RoundScore (
     ScoreID INT AUTO_INCREMENT PRIMARY KEY,
     CompetitionID INT,
@@ -100,23 +104,6 @@ CREATE TABLE RoundScore (
     FOREIGN KEY (BaseRoundID) REFERENCES BaseRound(BaseRoundID)
 );
 
--- End table
-CREATE TABLE `End` (
-    EndID INT AUTO_INCREMENT PRIMARY KEY,
-    ScoreID INT NOT NULL,
-    Position INT NOT NULL,
-    FOREIGN KEY (ScoreID) REFERENCES RoundScore(ScoreID)
-);
-
--- Arrow table
-CREATE TABLE Arrow (
-    ArrowID INT AUTO_INCREMENT PRIMARY KEY,
-    EndID INT NOT NULL,
-    Score INT NOT NULL,
-    FOREIGN KEY (EndID) REFERENCES End(EndID)
-);
-
--- EquivalentRound table
 CREATE TABLE EquivalentRound (
     EquivalentRoundID INT AUTO_INCREMENT PRIMARY KEY,
     BaseRoundID INT NOT NULL,
@@ -129,4 +116,22 @@ CREATE TABLE EquivalentRound (
     FOREIGN KEY (ActualRoundID) REFERENCES BaseRound(BaseRoundID),
     FOREIGN KEY (ClassID) REFERENCES Class(ClassID),
     FOREIGN KEY (EquipmentID) REFERENCES EquipmentType(EquipmentID)
+);
+
+-- ------------------------------------------------------------------------------------------------
+-- Round
+-- ------------------------------------------------------------------------------------------------
+
+CREATE TABLE `End` (
+    EndID INT AUTO_INCREMENT PRIMARY KEY,
+    ScoreID INT NOT NULL,
+    Position INT NOT NULL,
+    FOREIGN KEY (ScoreID) REFERENCES RoundScore(ScoreID)
+);
+
+CREATE TABLE Arrow (
+    ArrowID INT AUTO_INCREMENT PRIMARY KEY,
+    EndID INT NOT NULL,
+    Score INT NOT NULL,
+    FOREIGN KEY (EndID) REFERENCES End(EndID)
 );

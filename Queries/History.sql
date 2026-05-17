@@ -1,5 +1,8 @@
+-- ------------------------------------------------------------------------------------------------
 -- View History score listing over time.
 -- ------------------------------------------------------------------------------------------------
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--
 -- Collects the total score of each round linked to a specific archer ID.
 --
 -- Collects all arrows and sums up the total using SUM(), COALESCE() returns the first  non-null
@@ -15,58 +18,92 @@ SELECT
     rs.`Time`,
     br.RoundName
 FROM RoundScore rs
-JOIN Archer a ON rs.ArcherID = a.ArcherID
-JOIN BaseRound br ON rs.BaseRoundID = br.BaseRoundID
-LEFT JOIN `End` e ON e.ScoreID = rs.ScoreID
-LEFT JOIN Arrow ar ON ar.EndID = e.EndID
+JOIN Archer a       ON rs.ArcherID = a.ArcherID
+JOIN BaseRound br   ON rs.BaseRoundID = br.BaseRoundID
+LEFT JOIN `End` e   ON e.ScoreID = rs.ScoreID
+LEFT JOIN Arrow ar  ON ar.EndID = e.EndID
 WHERE -- EDIT VARIABLE HERE
     rs.ArcherID = 1
 GROUP BY
-    br.RoundName,
+    a.ArcherID, -- Distinguish between archers with the same name
     a.FirstName,
     a.LastName,
     rs.`Date`,
-    rs.`Time`
+    rs.`Time`,
+    br.RoundName
 ORDER BY
-    rs.`Date` ASC,
-    rs.`Time` ASC;
+    rs.`Date`   ASC,
+    rs.`Time`   ASC;
 
+-- ------------------------------------------------------------------------------------------------
 -- Filter scores by date, range and round type.
 -- ------------------------------------------------------------------------------------------------
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--
+-- Collects all the archers scores for each round they have competed in and filters by date, range
+-- and round type.
 SELECT
     a.FirstName,
     a.LastName,
     COALESCE(SUM(ar.Score), 0) AS TotalScore,
+    br.RoundName,
     r.DistanceToTargetM,
     r.TargetFaceCm,
     r.NumberOfEnds,
     rs.`Date`
 FROM RoundScore rs
-JOIN Archer a ON a.ArcherID = rs.ArcherID
-JOIN BaseRound br ON br.BaseRoundID= rs.BaseRoundID
+JOIN Archer a               ON a.ArcherID = rs.ArcherID
+JOIN BaseRound br           ON br.BaseRoundID = rs.BaseRoundID
 JOIN JunctionRoundRange jrr ON jrr.BaseRoundID = br.BaseRoundID
-JOIN RangeType r ON r.RangeID = jrr.RangeID
-LEFT JOIN `End` e ON e.ScoreID = rs.ScoreID
-LEFT JOIN Arrow ar ON ar.EndID = e.EndID
+JOIN RangeType r            ON r.RangeID = jrr.RangeID
+LEFT JOIN `End` e           ON e.ScoreID = rs.ScoreID
+LEFT JOIN Arrow ar          ON ar.EndID = e.EndID
 WHERE -- EDIT VARIABLES HERE
-    a.ArcherID = 1,
-    AND rs.`Date` BETWEEN '2023-01-01' AND '2023-12-31',
-    AND r.DistanceToTargetM = 50,
-    AND br.RoundName = 'WA 18m'
+    a.ArcherID = 1
+    AND rs.`Date` BETWEEN '2012-01-01' AND '2015-12-31'
+    AND r.DistanceToTargetM = 90
+    AND br.RoundName = 'WA90/1440'
 GROUP BY
+    a.ArcherID, -- Distinguish between archers with the same name
     a.FirstName,
     a.LastName,
+    br.RoundName,
     r.DistanceToTargetM,
     r.TargetFaceCm,
     r.NumberOfEnds,
     rs.`Date`
 ORDER BY
     r.DistanceToTargetM DESC,
-    r.TargetFaceCm DESC,
-    r.NumberOfEnds DESC,
-    rs.`Date` DESC;
+    r.TargetFaceCm      DESC,
+    r.NumberOfEnds      DESC;
 
+-- ------------------------------------------------------------------------------------------------
 -- Sort listings by date and score.
 -- ------------------------------------------------------------------------------------------------
--- Description...
--- Technical description...
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--
+-- Collects all rounds an archer has participated in and orders based on the total score and date
+SELECT
+    a.FirstName,
+    a.LastName,
+    COALESCE(SUM(ar.Score), 0) AS TotalScore,
+    br.RoundName,
+    rs.`Date`
+FROM RoundScore rs
+JOIN Archer a               ON a.ArcherID = rs.ArcherID
+JOIN BaseRound br           ON br.BaseRoundID= rs.BaseRoundID
+JOIN JunctionRoundRange jrr ON jrr.BaseRoundID = br.BaseRoundID
+JOIN RangeType r            ON r.RangeID = jrr.RangeID
+LEFT JOIN `End` e           ON e.ScoreID = rs.ScoreID
+LEFT JOIN Arrow ar          ON ar.EndID = e.EndID
+WHERE -- EDIT VARIABLES HERE
+    a.ArcherID = 1
+GROUP BY
+    a.ArcherID, -- Distinguish between archers with the same name
+    a.FirstName,
+    a.LastName,
+    rs.`Time`,
+    rs.`Date`
+ORDER BY
+    TotalScore  DESC,
+    rs.`Date`   ASC;

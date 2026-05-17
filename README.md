@@ -69,15 +69,15 @@ The purpose of this submission is to provide evidence of your work during this s
 
 - History
     - [x] View History score listing over time.
-    - [ ] Filter scores by date range and round type.
-    - [ ] Sort listings by date and score.
+    - [x] Filter scores by date range and round type.
+    - [x] Sort listings by date and score.
 - Lookup
     - [ ] The Archers Personal Best (PB) for specific rounds.
     - [ ] The club's overall best score for a round and the record holder.
     - [ ] Round definitions (Distances, ends, target faces).
     - [ ] Find equivalent rounds.
 - Competitions
-    - [ ] View club competition results (placings, arrow totals, scores).
+    - [x] View club competition results (placings, arrow totals, scores).
     - [ ] View yearly club championship results and identify winners.
 - [ ] Stage scores by using the hand held device.
 

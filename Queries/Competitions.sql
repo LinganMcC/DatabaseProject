@@ -104,5 +104,104 @@ ORDER BY
 -- ------------------------------------------------------------------------------------------------
 -- View yearly club championship results and identify winners.
 -- ------------------------------------------------------------------------------------------------
--- Description...
--- Technical description...
+-- Author: - Viet Hoang Tran   studentid : 104688235
+--
+-- Shows the yearly club championship results by adding together each archer's approved scores
+-- from all competitions that belong to a selected championship year. The query ranks archers by
+-- their total championship score, allowing the club to identify the championship winner. If two
+-- or more archers have the same total score, they will receive the same rank.
+
+-- Important:
+-- This query only includes approved scores:
+--      rs.IsApproved = TRUE
+--
+-- This prevents unapproved or staged scores from being counted in the championship results.
+-- ------------------------------------------------------------------------------------------------
+
+WITH ChampionshipResult AS (
+    SELECT
+        ch.ChampionshipID,
+        ch.ChampionshipName,
+        ch.Year,
+
+        cmp.CompetitionID,
+        cmp.CompetitionName,
+        cmp.CompetitionDate,
+
+        a.ArcherID,
+        a.FirstName,
+        a.LastName,
+
+        SUM(ar.Score) AS CompetitionScore
+    FROM Championship ch
+    JOIN Competition cmp
+        ON cmp.ChampionshipID = ch.ChampionshipID
+    JOIN RoundScore rs
+        ON rs.CompetitionID = cmp.CompetitionID
+    JOIN Archer a
+        ON a.ArcherID = rs.ArcherID
+    JOIN `End` e
+        ON e.ScoreID = rs.ScoreID
+    JOIN Arrow ar
+        ON ar.EndID = e.EndID
+    WHERE
+        rs.IsApproved = TRUE
+        AND ch.Year = 2010
+    GROUP BY
+        ch.ChampionshipID,
+        ch.ChampionshipName,
+        ch.Year,
+        cmp.CompetitionID,
+        cmp.CompetitionName,
+        cmp.CompetitionDate,
+        a.ArcherID,
+        a.FirstName,
+        a.LastName
+),
+
+ArcherChampionshipTotal AS (
+    SELECT
+        ChampionshipID,
+        ChampionshipName,
+        Year,
+        ArcherID,
+        FirstName,
+        LastName,
+        SUM(CompetitionScore) AS ChampionshipTotalScore
+    FROM ChampionshipResult
+    GROUP BY
+        ChampionshipID,
+        ChampionshipName,
+        Year,
+        ArcherID,
+        FirstName,
+        LastName
+),
+
+RankedChampionship AS (
+    SELECT
+        ChampionshipName,
+        Year,
+        ArcherID,
+        FirstName,
+        LastName,
+        ChampionshipTotalScore,
+
+        RANK() OVER (
+            PARTITION BY ChampionshipID
+            ORDER BY ChampionshipTotalScore DESC
+        ) AS ChampionshipRank
+    FROM ArcherChampionshipTotal
+)
+
+SELECT
+    ChampionshipName,
+    Year,
+    ChampionshipRank,
+    FirstName,
+    LastName,
+    ChampionshipTotalScore
+FROM RankedChampionship
+ORDER BY
+    Year DESC,
+    ChampionshipRank ASC;

@@ -78,7 +78,7 @@ The purpose of this submission is to provide evidence of your work during this s
     - [x] Find equivalent rounds.
 - Competitions
     - [x] View club competition results (placings, arrow totals, scores).
-    - [ ] View yearly club championship results and identify winners.
+    - [x] View yearly club championship results and identify winners.
 - [ ] Stage scores by using the hand held device.
 
 ## Recorder Requirements

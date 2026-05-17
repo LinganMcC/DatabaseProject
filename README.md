@@ -16,7 +16,7 @@ The purpose of this submission is to provide evidence of your work during this s
 > **_Aliases:_**
 >
 > - Club = cl
-> - EquipmentType = eqt
+> - EquipmentType = et
 > - ChampionShip = chp
 > - BaseRound = br
 > - RangeType = r
@@ -27,7 +27,7 @@ The purpose of this submission is to provide evidence of your work during this s
 > - RoundScore = rs
 > - End = e
 > - Arrow = ar
-> - EquivalentRound = eqr
+> - EquivalentRound = er
 >
 > **_Variables in queries:_** Mark them using `-- EDIT VARIABLE HERE` to make it clear. Look in History, the first query for an example.
 
@@ -72,10 +72,10 @@ The purpose of this submission is to provide evidence of your work during this s
     - [x] Filter scores by date range and round type.
     - [x] Sort listings by date and score.
 - Lookup
-    - [ ] The Archers Personal Best (PB) for specific rounds.
-    - [ ] The club's overall best score for a round and the record holder.
-    - [ ] Round definitions (Distances, ends, target faces).
-    - [ ] Find equivalent rounds.
+    - [x] The Archers Personal Best (PB) for specific rounds.
+    - [x] The club's overall best score for a round and the record holder.
+    - [x] Round definitions (Distances, ends, target faces).
+    - [x] Find equivalent rounds.
 - Competitions
     - [x] View club competition results (placings, arrow totals, scores).
     - [ ] View yearly club championship results and identify winners.

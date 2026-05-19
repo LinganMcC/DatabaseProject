@@ -76,10 +76,11 @@ The purpose of this submission is to provide evidence of your work during this s
     - [x] The club's overall best score for a round and the record holder.
     - [x] Round definitions (Distances, ends, target faces).
     - [x] Find equivalent rounds.
+    - [ ] Stage scores by approved.
+    - [ ] Round and see all equivalent rounds
 - Competitions
     - [x] View club competition results (placings, arrow totals, scores).
     - [x] View yearly club championship results and identify winners.
-- [ ] Stage scores by using the hand held device.
 
 ## Recorder Requirements
 

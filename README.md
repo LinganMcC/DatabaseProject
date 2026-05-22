@@ -72,7 +72,6 @@ The purpose of this submission is to provide evidence of your work during this s
     - [x] Filter scores by date range and round type.
     - [x] Sort listings by date and score.
 - Lookup
-    - [x] The Archers Personal Best (PB) for specific rounds.
     - [x] The club's overall best score for a round and the record holder.
     - [x] Round definitions (Distances, ends, target faces).
     - [x] Find equivalent rounds.
@@ -81,6 +80,7 @@ The purpose of this submission is to provide evidence of your work during this s
 - Competitions
     - [x] View club competition results (placings, arrow totals, scores).
     - [x] View yearly club championship results and identify winners.
+- [ ] Stage scores by using the hand held device.
 
 ## Recorder Requirements
 
@@ -88,6 +88,7 @@ The purpose of this submission is to provide evidence of your work during this s
     - [ ] Enter and configure new archers into the system.
     - [ ] Define new rounds and setup upcoming competitions.
     - [ ] Flag which specific scores qualify for standard competitions vs club championships.
+    
 - Score Management
     - [ ] Review and add new scores staged by archers.
     - [ ] Approve practice scores by verifying the staged equipment matches the recorded equipment.

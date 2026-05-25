@@ -148,3 +148,75 @@ ORDER BY
     c.Gender ASC,
     c.MinAge DESC,
     et.Name  ASC;
+
+
+-- ------------------------------------------------------------------------------------------------
+-- Show all approved/unapproved (staged) scores.
+-- ------------------------------------------------------------------------------------------------
+-- Authors: - Ewan Robson   103992579@student.swin.edu.au
+--
+-- OPT 1:
+--      Shows all archers scores staged/unstaged and ordered by their IsApproved thus making the
+--      staged scores appear first.
+-- OPT 1:
+--      Shows all archers scores dictated by their IsApproved thus only showing either staged or
+--      unstaged scores controlled through the WHERE clause.
+
+-- OPT 1:
+SELECT
+    a.FirstName,
+    a.LastName,
+    -- rs.IsApproved, -- Check if CASE WHEN is working properly
+    CASE WHEN
+        rs.IsApproved = 1 THEN 'Approved' ELSE "Not Approved"
+        END AS ApprovedStatus,
+    rs.`Date`,
+    rs.`Time`,
+    br.RoundName
+FROM RoundScore rs
+JOIN Archer a       ON rs.ArcherID = a.ArcherID
+JOIN BaseRound br   ON rs.BaseRoundID = br.BaseRoundID
+LEFT JOIN `End` e   ON e.ScoreID = rs.ScoreID
+LEFT JOIN Arrow ar  ON ar.EndID = e.EndID
+WHERE -- EDIT VARIABLE HERE
+    rs.ArcherID = 1
+GROUP BY
+    a.FirstName,
+    a.LastName,
+    rs.IsApproved,
+    rs.`Date`,
+    rs.`Time`,
+    br.RoundName
+ORDER BY
+    rs.IsApproved DESC,
+    rs.`Date`     ASC,
+    rs.`Time`     ASC;
+
+-- OPT 2
+SELECT
+    a.FirstName,
+    a.LastName,
+    CASE WHEN
+        rs.IsApproved = 1 THEN 'Approved' ELSE "Not Approved"
+        END AS ApprovedStatus,
+    rs.`Date`,
+    rs.`Time`,
+    br.RoundName
+FROM RoundScore rs
+JOIN Archer a       ON rs.ArcherID = a.ArcherID
+JOIN BaseRound br   ON rs.BaseRoundID = br.BaseRoundID
+LEFT JOIN `End` e   ON e.ScoreID = rs.ScoreID
+LEFT JOIN Arrow ar  ON ar.EndID = e.EndID
+WHERE -- EDIT VARIABLE HERE
+    rs.ArcherID = 1
+    AND rs.IsApproved = 1
+GROUP BY
+    a.FirstName,
+    a.LastName,
+    rs.IsApproved,
+    rs.`Date`,
+    rs.`Time`,
+    br.RoundName
+ORDER BY
+    rs.`Date`   ASC,
+    rs.`Time`   ASC;

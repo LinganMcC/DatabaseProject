@@ -149,74 +149,62 @@ ORDER BY
     c.MinAge DESC,
     et.Name  ASC;
 
-
 -- ------------------------------------------------------------------------------------------------
--- Show all approved/unapproved (staged) scores.
+-- Stage scores by approved.
 -- ------------------------------------------------------------------------------------------------
--- Authors: - Ewan Robson   103992579@student.swin.edu.au
+-- Authors: - Viet Hoang Tran - 104688235@student.swin.edu.au
 --
--- OPT 1:
---      Shows all archers scores staged/unstaged and ordered by their IsApproved thus making the
---      staged scores appear first.
--- OPT 1:
---      Shows all archers scores dictated by their IsApproved thus only showing either staged or
---      unstaged scores controlled through the WHERE clause.
+--The recorder needs to look up all staged scores waiting for approval. The system retrieves all RoundScore
+--records where IsApproved = FALSE, joins them with Archer, BaseRound, EquipmentType, optional
+--Competition, End, and Arrow, and displays the archer name, round, equipment, date, time, competition
+--details, total arrows recorded, and total score. This allows the recorder to verify the score before approving it.
 
--- OPT 1:
 SELECT
-    a.FirstName,
-    a.LastName,
-    -- rs.IsApproved, -- Check if CASE WHEN is working properly
-    CASE WHEN
-        rs.IsApproved = 1 THEN 'Approved' ELSE "Not Approved"
-        END AS ApprovedStatus,
+    rs.ScoreID,
+    a.ArcherID,
+    CONCAT(a.FirstName, ' ', a.LastName) AS ArcherName,
+    c.Name AS ClubName,
+    br.RoundName AS RoundShot,
+    et.Name AS EquipmentUsed,
     rs.`Date`,
     rs.`Time`,
-    br.RoundName
+    cmp.CompetitionName,
+    cmp.CompetitionDate,
+    COUNT(ar.ArrowID) AS NumberOfArrowsRecorded,
+    SUM(ar.Score) AS TotalScore,
+    CASE
+        WHEN rs.IsApproved = TRUE THEN 'Approved'
+        ELSE 'Staged / Waiting for Approval'
+    END AS ApprovalStatus
 FROM RoundScore rs
-JOIN Archer a       ON rs.ArcherID = a.ArcherID
-JOIN BaseRound br   ON rs.BaseRoundID = br.BaseRoundID
-LEFT JOIN `End` e   ON e.ScoreID = rs.ScoreID
-LEFT JOIN Arrow ar  ON ar.EndID = e.EndID
-WHERE -- EDIT VARIABLE HERE
-    rs.ArcherID = 1
+JOIN Archer a
+    ON a.ArcherID = rs.ArcherID
+LEFT JOIN Club c
+    ON c.ClubID = a.ClubID
+JOIN BaseRound br
+    ON br.BaseRoundID = rs.BaseRoundID
+JOIN EquipmentType et
+    ON et.EquipmentID = rs.EquipmentID
+LEFT JOIN Competition cmp
+    ON cmp.CompetitionID = rs.CompetitionID
+LEFT JOIN `End` e
+    ON e.ScoreID = rs.ScoreID
+LEFT JOIN Arrow ar
+    ON ar.EndID = e.EndID
+WHERE rs.IsApproved = FALSE
 GROUP BY
+    rs.ScoreID,
+    a.ArcherID,
     a.FirstName,
     a.LastName,
-    rs.IsApproved,
+    c.Name,
+    br.RoundName,
+    et.Name,
     rs.`Date`,
     rs.`Time`,
-    br.RoundName
+    cmp.CompetitionName,
+    cmp.CompetitionDate,
+    rs.IsApproved
 ORDER BY
-    rs.IsApproved DESC,
-    rs.`Date`     ASC,
-    rs.`Time`     ASC;
-
--- OPT 2
-SELECT
-    a.FirstName,
-    a.LastName,
-    CASE WHEN
-        rs.IsApproved = 1 THEN 'Approved' ELSE "Not Approved"
-        END AS ApprovedStatus,
-    rs.`Date`,
-    rs.`Time`,
-    br.RoundName
-FROM RoundScore rs
-JOIN Archer a       ON rs.ArcherID = a.ArcherID
-JOIN BaseRound br   ON rs.BaseRoundID = br.BaseRoundID
-LEFT JOIN `End` e   ON e.ScoreID = rs.ScoreID
-LEFT JOIN Arrow ar  ON ar.EndID = e.EndID
-WHERE -- EDIT VARIABLE HERE
-    rs.ArcherID = 1
-    AND rs.IsApproved = 1
-GROUP BY
-    a.FirstName,
-    a.LastName,
-    rs.IsApproved,
-    rs.`Date`,
-    rs.`Time`,
-    br.RoundName
-ORDER BY
-    rs.`Date`   ASC,
-    rs.`Time`   ASC;
+    rs.`Date` ASC,
+    rs.`Time` ASC;

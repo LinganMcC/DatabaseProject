@@ -7,17 +7,24 @@ Run:   python fill_competition_inserts.py
 """
 
 import random
-from datetime import date, timedelta
 from fill_archer_inserts import (
-    NUM_BASE_ROUNDS,
     NUM_CLUBS,
-    NUM_CHAMPIONSHIPS,
     NUM_COMPETITIONS,
+    COMPETITION_BASE_ROUND_IDS,
+    COMPETITION_CHAMPIONSHIP_IDS,
+    COMPETITION_DATES,
 )
 
-CHAMPIONSHIP_CHANCE = 0.35
-DATE_MIN = date(2010, 1, 1)
-DATE_MAX = date(2025, 12, 31)
+# ClubID 1 is the "home club" — most competitions are hosted there so club-
+# scoped queries have rich data without needing many clubs in the dataset.
+HOME_CLUB_ID = 1
+HOME_CLUB_CHANCE = 0.6
+
+
+def pick_club_id():
+    if NUM_CLUBS == 1 or random.random() < HOME_CLUB_CHANCE:
+        return HOME_CLUB_ID
+    return random.randint(2, NUM_CLUBS)
 
 PREFIXES = [
     "Annual",
@@ -47,24 +54,17 @@ SUFFIXES = [
 ]
 
 
-def random_date(start, end):
-    return start + timedelta(days=random.randint(0, (end - start).days))
-
-
 def random_name():
     return f"{random.choice(PREFIXES)} Archery {random.choice(SUFFIXES)}"
 
 
 rows = []
-for _ in range(NUM_COMPETITIONS):
-    round_id = random.randint(1, NUM_BASE_ROUNDS)
-    club_id = random.randint(1, NUM_CLUBS)
-    champ_id = (
-        random.randint(1, NUM_CHAMPIONSHIPS)
-        if random.random() < CHAMPIONSHIP_CHANCE
-        else "NULL"
-    )
-    comp_date = random_date(DATE_MIN, DATE_MAX)
+for i in range(NUM_COMPETITIONS):
+    round_id = COMPETITION_BASE_ROUND_IDS[i]
+    club_id = pick_club_id()
+    champ_id_value = COMPETITION_CHAMPIONSHIP_IDS[i]
+    champ_id = "NULL" if champ_id_value is None else champ_id_value
+    comp_date = COMPETITION_DATES[i]
     name = random_name().replace("'", "''")
     rows.append(f"({round_id}, {club_id}, {champ_id}, '{comp_date}', '{name}')")
 

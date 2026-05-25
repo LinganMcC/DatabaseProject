@@ -1,90 +1,159 @@
--- ------------------------------------------------------------------------------------------------
--- The Archers Personal Best (PB) for specific rounds.
--- ------------------------------------------------------------------------------------------------
--- Authors: - Shriyans Simhadri: 105914805@student.swin.edu.au
+-- ================================================================================================
+-- Personal Best (PB) for rounds.
+-- ================================================================================================
+-- Authors: Liam McCarthy     105336043@student.swin.edu.au
+--          Shriyans Simhadri 105914805@student.swin.edu.au
 --
--- Finds the single highest total score an archer has ever shot for each round.
+-- Returns archers' PBs per round, with the date set.
 --
--- SUM(ar.Score) totals all arrow scores per round attempt. MAX() then picks the
--- highest of those totals across all attempts at that round, giving the PB.
--- COALESCE() handles rounds where no arrows were recorded, returning 0 instead of NULL.
--- Results are grouped per archer + round so each row represents one round's PB.
-SELECT
-    a.FirstName,
-    a.LastName,
-    br.RoundName,
-    MAX(COALESCE(attempt_scores.TotalScore, 0)) AS PersonalBest
-FROM Archer a
-JOIN RoundScore rs ON rs.ArcherID = a.ArcherID
-JOIN BaseRound br  ON br.BaseRoundID = rs.BaseRoundID
-JOIN (
-    -- Sub-query: sum arrows per individual round attempt first,
-    -- then the outer MAX() picks the best attempt per round.
+-- HOW TO USE:
+--  | 1. Copy CTE (Entire WITH query) and paste at the top within phpmyadmin SQL
+--  | 2. Select either one of the following queries and paste under CTE query:
+--  |    - OPT 1: See PBs for all archers across all rounds
+--  |    - OPT 2: See PBs for one specific archer (edit ArcherID in WHERE clause)
+--
+-- Technical Info:
+-- RANK() ties are preserved -- if an archer equals their own PB on a later date,
+-- both attempts are returned rather than arbitrarily dropping one.
+WITH ArcherPBRanked AS (
     SELECT
-        rs2.ScoreID,
-        COALESCE(SUM(ar2.Score), 0) AS TotalScore
-    FROM RoundScore rs2
-    LEFT JOIN `End` e2  ON e2.ScoreID = rs2.ScoreID
-    LEFT JOIN Arrow ar2 ON ar2.EndID = e2.EndID
-    GROUP BY rs2.ScoreID
-) AS attempt_scores ON attempt_scores.ScoreID = rs.ScoreID
-WHERE -- EDIT VARIABLE HERE
-    a.ArcherID = 1
-    AND rs.IsApproved = 1
-GROUP BY
-    a.ArcherID,
-    a.FirstName,
-    a.LastName,
-    br.BaseRoundID,
-    br.RoundName
-ORDER BY
-    br.RoundName ASC;
-
-
--- ------------------------------------------------------------------------------------------------
--- The club's overall best score for a round and the record holder.
--- ------------------------------------------------------------------------------------------------
--- Authors: - Shriyans Simhadri: 105914805@student.swin.edu.au
---
--- Finds the single highest approved score ever shot for each round across all archers,
--- and identifies which archer holds that club record.
---
--- The inner sub-query totals every approved score attempt, ranking them within each
--- round using RANK() OVER (PARTITION BY ...). The outer query then filters to
--- rank = 1 to return only the top score per round. RANK() is used instead of
--- ROW_NUMBER() so that tied record holders are both shown.
-SELECT
-    br.RoundName,
-    a.FirstName,
-    a.LastName,
-    ranked.TotalScore AS ClubRecord
-FROM (
-    SELECT
-        rs.ScoreID,
-        rs.ArcherID,
-        rs.BaseRoundID,
+        a.ArcherID,
+        a.FirstName,
+        a.LastName,
+        br.BaseRoundID,
+        br.RoundName,
+        rs.`Date` AS ScoreDate,
         COALESCE(SUM(ar.Score), 0) AS TotalScore,
         RANK() OVER (
-            PARTITION BY rs.BaseRoundID          -- rank within each round independently
-            ORDER BY COALESCE(SUM(ar.Score), 0) DESC  -- highest score = rank 1
+            PARTITION BY a.ArcherID, br.BaseRoundID
+            ORDER BY COALESCE(SUM(ar.Score), 0) DESC
         ) AS ScoreRank
     FROM RoundScore rs
-    LEFT JOIN `End` e   ON e.ScoreID = rs.ScoreID
-    LEFT JOIN Arrow ar  ON ar.EndID = e.EndID
-    WHERE rs.IsApproved = 1
+    JOIN Archer    a   ON a.ArcherID     = rs.ArcherID
+    JOIN BaseRound br  ON br.BaseRoundID = rs.BaseRoundID
+    LEFT JOIN `End` e  ON e.ScoreID      = rs.ScoreID
+    LEFT JOIN Arrow ar ON ar.EndID       = e.EndID
+    WHERE
+        rs.IsApproved = TRUE
     GROUP BY
         rs.ScoreID,
-        rs.ArcherID,
-        rs.BaseRoundID
-) AS ranked
-JOIN Archer a       ON a.ArcherID = ranked.ArcherID
-JOIN BaseRound br   ON br.BaseRoundID = ranked.BaseRoundID
-WHERE ranked.ScoreRank = 1          -- only the top score(s) per round
+        a.ArcherID,
+        a.FirstName,
+        a.LastName,
+        br.BaseRoundID,
+        br.RoundName,
+        rs.`Date`
+)
+
+-- OPT 1: See PBs for all archers
+SELECT
+    FirstName,
+    LastName,
+    RoundName,
+    TotalScore AS PersonalBest,
+    ScoreDate
+FROM ArcherPBRanked
+WHERE
+    ScoreRank = 1
 ORDER BY
-    br.RoundName      ASC,
-    ranked.TotalScore DESC;
+    LastName    ASC,
+    FirstName   ASC,
+    RoundName   ASC;
+
+-- OPT 2: See PBs for one specific archer
+SELECT
+    FirstName,
+    LastName,
+    RoundName,
+    TotalScore AS PersonalBest,
+    ScoreDate
+FROM ArcherPBRanked
+WHERE
+    ScoreRank = 1
+    AND ArcherID = 1    -- EDIT: change to the ArcherID you want
+ORDER BY
+    RoundName ASC;
 
 
+-- ================================================================================================
+-- Club record for rounds (best approved score and who holds it).
+-- ================================================================================================
+-- Authors: Liam McCarthy     105336043@student.swin.edu.au
+--          Shriyans Simhadri 105914805@student.swin.edu.au
+--
+-- Returns each club's record per round, with the holder's name and the date it was set.
+--
+-- HOW TO USE:
+--  | 1. Copy CTE (Entire WITH query) and paste at the top within phpmyadmin SQL
+--  | 2. Select either one of the following queries and paste under CTE query:
+--  |    - OPT 1: See records for all clubs across all rounds
+--  |    - OPT 2: See records for one specific club (edit ClubID in WHERE clause)
+--
+-- Technical Info:
+-- RANK() ties are preserved -- if two archers in the same club share the record,
+-- both are returned rather than arbitrarily dropping one.
+WITH ClubRecordRanked AS (
+    SELECT
+        cl.ClubID,
+        cl.Name AS ClubName,
+        br.BaseRoundID,
+        br.RoundName,
+        a.FirstName,
+        a.LastName,
+        rs.`Date` AS ScoreDate,
+        COALESCE(SUM(ar.Score), 0) AS TotalScore,
+        RANK() OVER (
+            PARTITION BY cl.ClubID, br.BaseRoundID
+            ORDER BY COALESCE(SUM(ar.Score), 0) DESC
+        ) AS ScoreRank
+    FROM RoundScore rs
+    JOIN Archer    a   ON a.ArcherID     = rs.ArcherID
+    JOIN Club      cl  ON cl.ClubID      = a.ClubID
+    JOIN BaseRound br  ON br.BaseRoundID = rs.BaseRoundID
+    LEFT JOIN `End` e  ON e.ScoreID      = rs.ScoreID
+    LEFT JOIN Arrow ar ON ar.EndID       = e.EndID
+    WHERE
+        rs.IsApproved = TRUE
+    GROUP BY
+        rs.ScoreID,
+        cl.ClubID,
+        cl.Name,
+        br.BaseRoundID,
+        br.RoundName,
+        a.FirstName,
+        a.LastName,
+        rs.`Date`
+)
+
+-- OPT 1: See records for all clubs
+SELECT
+    ClubName,
+    RoundName,
+    FirstName,
+    LastName,
+    TotalScore AS ClubRecord,
+    ScoreDate
+FROM ClubRecordRanked
+WHERE
+    ScoreRank = 1
+ORDER BY
+    ClubName  ASC,
+    RoundName ASC;
+
+-- OPT 2: See records for one specific club
+SELECT
+    ClubName,
+    RoundName,
+    FirstName,
+    LastName,
+    TotalScore AS ClubRecord,
+    ScoreDate
+FROM ClubRecordRanked
+WHERE
+    ScoreRank = 1
+    AND ClubID = 4    -- EDIT: change to the ClubID you want
+ORDER BY
+    RoundName ASC; 
 -- ------------------------------------------------------------------------------------------------
 -- Round definitions (Distances, ends, target faces).
 -- ------------------------------------------------------------------------------------------------

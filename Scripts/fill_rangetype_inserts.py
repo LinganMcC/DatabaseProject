@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """
 Generate INSERT statements for the RangeType table.
-Count is pulled from fill_archer_inserts.NUM_RANGES so RangeIDs match
-the range used by the JunctionRoundRange script.
+ALL_COMBINATIONS is imported by fill_archer_inserts so its order defines
+the RangeID assigned by AUTO_INCREMENT.
 Run:   python fill_rangetype_inserts.py
 """
-
-from fill_archer_inserts import NUM_RANGES
 
 # (DistanceToTargetM, TargetFaceCm, NumberOfEnds)
 ALL_COMBINATIONS = [
@@ -81,8 +79,11 @@ ALL_COMBINATIONS = [
     # (30, 122, 36),
 ]
 
-print("INSERT INTO RangeType (DistanceToTargetM, TargetFaceCm, NumberOfEnds) VALUES")
-print(
-    ",\n".join(f"  ({dist}, {face}, {ends})" for (dist, face, ends) in ALL_COMBINATIONS)
-    + ";"
-)
+if __name__ == "__main__":
+    print("INSERT INTO RangeType (DistanceToTargetM, TargetFaceCm, NumberOfEnds) VALUES")
+    print(
+        ",\n".join(
+            f"  ({dist}, {face}, {ends})" for (dist, face, ends) in ALL_COMBINATIONS
+        )
+        + ";"
+    )

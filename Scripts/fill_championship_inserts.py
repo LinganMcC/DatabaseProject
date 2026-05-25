@@ -7,10 +7,7 @@ Run:   python fill_championship_inserts.py
 """
 
 import random
-from fill_archer_inserts import NUM_CHAMPIONSHIPS
-
-YEAR_MIN = 2000
-YEAR_MAX = 2025
+from fill_archer_inserts import NUM_CHAMPIONSHIPS, CHAMPIONSHIP_YEARS
 
 TYPES = ["Club", "State", "Regional", "National", "Open", "Youth", "Masters", "Indoor"]
 STATES = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "ACT", "NT"]
@@ -30,9 +27,9 @@ def random_name():
 
 
 rows = []
-for _ in range(NUM_CHAMPIONSHIPS):
+for i in range(NUM_CHAMPIONSHIPS):
     name = random_name().replace("'", "''")
-    year = random.randint(YEAR_MIN, YEAR_MAX)
+    year = CHAMPIONSHIP_YEARS[i]
     rows.append(f"('{name}', {year})")
 
 print("INSERT INTO Championship (ChampionshipName, Year) VALUES")

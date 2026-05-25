@@ -11,13 +11,12 @@ import random
 from datetime import date, timedelta
 from fill_archer_inserts import (
     num_archers,
-    NUM_BASE_ROUNDS,
     NUM_EQUIPMENT,
-    NUM_COMPETITIONS,
     NUM_ROUND_SCORES,
+    ROUNDSCORE_COMPETITION_IDS,
+    ROUNDSCORE_BASE_ROUND_IDS,
 )
 
-COMPETITION_CHANCE = 0.6  # probability a score is tied to a competition
 APPROVED_CHANCE = 0.75  # probability an entered score is approved
 DATE_MIN = date(2010, 1, 1)
 DATE_MAX = date(2025, 12, 31)
@@ -38,12 +37,9 @@ rows = []
 # with random picks. This guarantees Archer-keyed queries return results.
 for i in range(NUM_ROUND_SCORES):
     archer_id = (i % num_archers) + 1
-    comp_id = (
-        random.randint(1, NUM_COMPETITIONS)
-        if random.random() < COMPETITION_CHANCE
-        else "NULL"
-    )
-    round_id = random.randint(1, NUM_BASE_ROUNDS)
+    comp_id_value = ROUNDSCORE_COMPETITION_IDS[i]
+    comp_id = "NULL" if comp_id_value is None else comp_id_value
+    round_id = ROUNDSCORE_BASE_ROUND_IDS[i]
     approved = 1 if random.random() < APPROVED_CHANCE else 0
     equip_id = random.randint(1, NUM_EQUIPMENT)
     score_date = random_date(DATE_MIN, DATE_MAX)

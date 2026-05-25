@@ -88,10 +88,12 @@ JUNCTION_ROUND_DEF = [
 ]
 # fmt: on
 
-print("INSERT INTO JunctionRoundRange (BaseRoundID, RangeID, RangePosition) VALUES")
-print(
-    ",\n".join(
-        f"  ({round}, {range}, {pos})" for (round, range, pos) in JUNCTION_ROUND_DEF
+if __name__ == "__main__":
+    print("INSERT INTO JunctionRoundRange (BaseRoundID, RangeID, RangePosition) VALUES")
+    print(
+        ",\n".join(
+            f"  ({round}, {range}, {pos})"
+            for (round, range, pos) in JUNCTION_ROUND_DEF
+        )
+        + ";"
     )
-    + ";"
-)

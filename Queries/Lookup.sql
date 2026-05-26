@@ -92,6 +92,7 @@ ORDER BY
 -- Technical Info:
 -- RANK() ties are preserved -- if two archers in the same club share the record,
 -- both are returned rather than arbitrarily dropping one.
+
 WITH ClubRecordRanked AS (
     SELECT
         cl.ClubID,
@@ -174,7 +175,7 @@ SELECT
     (r.NumberOfEnds * 6) AS TotalArrows   -- each end always has 6 arrows
 FROM BaseRound br
 JOIN JunctionRoundRange jrr ON jrr.BaseRoundID = br.BaseRoundID
-JOIN `Range` r              ON r.RangeID = jrr.RangeID
+JOIN RangeType r              ON r.RangeID = jrr.RangeID
 WHERE -- EDIT VARIABLE HERE
     br.RoundName = 'WA90/1440'
 ORDER BY

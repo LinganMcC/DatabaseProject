@@ -146,11 +146,8 @@ CREATE TABLE Arrow (
 CREATE INDEX Idx_RoundScoreArcherDateTime ON RoundScore(ArcherID, `Date`, `Time`);
 -- Speeds up WHERE br.RoundName = "..." - History (2), Lookup (3, 4)
 CREATE INDEX Idx_BaseRoundName ON BaseRound(RoundName)
---Speeds up WHERE Isapproved = True and Archer = ?, BaseRoundID = ? - PersonalBest, CLub record, Stage Score approval
-CREATE INDEX Idx_RoundScore_IsApproved_Archer ON RoundScore(IsApproved, ArcherID, BaseRoundID);
---Every score-summing query needs to join End and Arrow
---So these 2 indexes will speed up all of those queries
-CREATE INDEX Idx_End_ScoreID ON `End`(ScoreID);
-CREATE INDEX Idx_Arrow_EndID ON Arrow(EndID);
+-- Speeds up when looking at equivalent rounds
+CREATE INDEX Idx_EquivalentRound_ValidTo ON EquivalentRound(ValidTo);
+
 
 

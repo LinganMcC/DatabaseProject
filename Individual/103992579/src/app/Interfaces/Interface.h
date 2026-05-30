@@ -1,10 +1,6 @@
 #pragma once
 
-#include "jdbc/cppconn/connection.h"
-#include "jdbc/cppconn/prepared_statement.h"
-#include "jdbc/cppconn/resultset.h"
 #include "raylib.h"
-#include <functional>
 #include <string>
 
 namespace app {
@@ -16,9 +12,6 @@ class Interface
     static constexpr unsigned MaxSectionTitleLength = 100;
 
 public:
-    using Pfn_PrepareStatement = std::function<void(sql::PreparedStatement* prepStatement)>;
-    using Pfn_ReadResult       = std::function<void(sql::ResultSet* result)>;
-
     Interface(std::string_view name, unsigned selectionCount, Application* app);
     virtual ~Interface() = default;
 
@@ -43,11 +36,6 @@ protected:
     void SetSelection(unsigned index);
 
     Rectangle GetButtonBounds(bool centered = true, int index = 0, int rowCount = 1);
-
-    sql::Connection* GetConnection() const;
-    bool QuerySQL(std::string_view query, Pfn_PrepareStatement bindFunc,
-                  Pfn_ReadResult readFunc) const;
-    bool InsertSQL(std::string_view statement, Pfn_PrepareStatement stmtFunc) const;
 
     float m_ButtonHeight = 40.0f;
     float m_yOffset      = 0.0f;

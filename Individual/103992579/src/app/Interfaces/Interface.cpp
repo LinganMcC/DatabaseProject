@@ -2,11 +2,6 @@
 #include "app/Error.h"
 
 #include "fmt/base.h"
-#include "jdbc/cppconn/connection.h"
-#include "jdbc/cppconn/exception.h"
-#include "jdbc/cppconn/prepared_statement.h"
-#include "jdbc/cppconn/resultset.h"
-#include "jdbc/mysql_driver.h"
 #include "raygui.h"
 #include "raylib.h"
 
@@ -131,63 +126,6 @@ Rectangle Interface::GetButtonBounds(bool centered, int index, int rowCount)
     m_yOffset += m_ButtonHeight + 2 * m_Padding;
 
     return bounds;
-}
-
-bool Interface::QuerySQL(std::string_view query, Pfn_PrepareStatement bindFunc,
-                         Pfn_ReadResult readFunc) const
-{
-    try
-    {
-        sql::Connection* connection           = GetConnection();
-        sql::PreparedStatement* prepStatement = connection->prepareStatement(query.data());
-
-        if (bindFunc)
-            bindFunc(prepStatement);
-        sql::ResultSet* result = prepStatement->executeQuery();
-
-        ASSERT(readFunc, "Why call this if you're not even going to read the results...");
-        readFunc(result);
-
-        delete result;
-        delete prepStatement;
-        delete connection;
-        return true;
-
-    } catch (sql::SQLException& e)
-    {
-        ERROR("Database Error: {}", e.what());
-        return false;
-    }
-}
-
-bool Interface::InsertSQL(std::string_view statement, Pfn_PrepareStatement bindFunc) const
-{
-    try
-    {
-        sql::Connection* connection           = GetConnection();
-        sql::PreparedStatement* prepStatement = connection->prepareStatement(statement.data());
-
-        if (bindFunc)
-            bindFunc(prepStatement);
-        prepStatement->executeUpdate();
-
-        delete prepStatement;
-        delete connection;
-        return true;
-
-    } catch (sql::SQLException& e)
-    {
-        ERROR("Database Error: {}", e.what());
-        return false;
-    }
-}
-
-sql::Connection* Interface::GetConnection() const
-{
-    sql::mysql::MySQL_Driver* driver = sql::mysql::get_mysql_driver_instance();
-    sql::Connection* connection      = driver->connect("tcp://127.0.0.1:3306", "root", "");
-    connection->setSchema("archer_database");
-    return connection;
 }
 
 } // namespace app

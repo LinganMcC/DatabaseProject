@@ -1,7 +1,7 @@
 #include "app/Interfaces/ChooseArcher.h"
 #include "app/Interfaces/Interface.h"
 
-#include "fmt/format.h"
+#include "app/SQL.h"
 #include "jdbc/cppconn/prepared_statement.h"
 #include "jdbc/cppconn/resultset.h"
 #include "raygui.h"
@@ -70,23 +70,19 @@ void ChooseArcherInterface::ChooseArcher()
 
         if (GuiButton(GetButtonBounds(), "Find Archer") || IsKeyPressed(KEY_ENTER))
         {
-            bool found    = false;
-            auto bindFunc = [&](sql::PreparedStatement* stmt)
+            SelectSQL select(QueryArcherExists);
+            select.BindString(m_FirstName);
+            select.BindString(m_LastName);
+
+            if (select.Execute())
             {
-                stmt->setString(1, m_FirstName);
-                stmt->setString(2, m_LastName);
-            };
-            auto readFunc = [&](sql::ResultSet* res)
-            {
-                if (res->next())
+                bool found = false;
+                if (select.GetResults()->next())
                 {
-                    int count = res->getInt(1);
+                    int count = select.GetResults()->getInt(1);
                     found     = count > 0;
                 }
-            };
 
-            if (QuerySQL(QueryArcherExists, bindFunc, readFunc))
-            {
                 if (found)
                 {
                     m_FoundArcher        = std::strlen(m_FirstName) + std::strlen(m_LastName);

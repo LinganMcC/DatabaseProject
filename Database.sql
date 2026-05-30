@@ -1,15 +1,15 @@
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 -- Clear Database if exists
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 
 -- Removing if exists
 DROP DATABASE IF EXISTS archer_database;
 CREATE DATABASE archer_database;
 USE archer_database;
 
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 -- Core Foundational Tables (Every table below relys on these tables)
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 
 CREATE TABLE Club (
     ClubID INT AUTO_INCREMENT PRIMARY KEY,
@@ -33,7 +33,6 @@ CREATE TABLE BaseRound (
     RoundName VARCHAR(255) NOT NULL
 );
 
-
 CREATE TABLE Class (
     ClassID INT AUTO_INCREMENT PRIMARY KEY,
     Gender VARCHAR(10),
@@ -41,9 +40,9 @@ CREATE TABLE Class (
     MaxAge INT NOT NULL
 );
 
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 -- Archer and Competitions Tables (Secondary, a lot of tables still rely on this)
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 
 CREATE TABLE Archer (
     ArcherID INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,6 +56,7 @@ CREATE TABLE Archer (
     FOREIGN KEY (ClubID) REFERENCES Club(ClubID)
 );
 
+
 CREATE TABLE Competition (
     CompetitionID INT AUTO_INCREMENT PRIMARY KEY,
     BaseRoundID INT NOT NULL,
@@ -69,9 +69,9 @@ CREATE TABLE Competition (
     FOREIGN KEY (ChampionshipID) REFERENCES Championship(ChampionshipID)
 );
 
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 -- Round Tables
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 
 CREATE TABLE RangeType (
     RangeID INT AUTO_INCREMENT PRIMARY KEY,
@@ -118,9 +118,11 @@ CREATE TABLE EquivalentRound (
     FOREIGN KEY (EquipmentID) REFERENCES EquipmentType(EquipmentID)
 );
 
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
 -- Round
--- ------------------------------------------------------------------------------------------------
+-- ================================================================================================
+
+-- No indexing required here, primary and foreign keys are already indexed
 
 CREATE TABLE `End` (
     EndID INT AUTO_INCREMENT PRIMARY KEY,
@@ -135,3 +137,12 @@ CREATE TABLE Arrow (
     Score INT NOT NULL,
     FOREIGN KEY (EndID) REFERENCES End(EndID)
 );
+
+-- ================================================================================================
+-- Indexing
+-- ================================================================================================
+
+-- Sorting/filtering by Date and Time when Archer = ? - History (2)
+CREATE INDEX Idx_RoundScoreArcherDateTime ON RoundScore(ArcherID, `Date`, `Time`);
+-- Speeds up WHERE br.RoundName = "..." - History (2), Lookup (3, 4)
+CREATE INDEX Idx_BaseRoundName ON BaseRound(RoundName)

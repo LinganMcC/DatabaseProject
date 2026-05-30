@@ -154,7 +154,7 @@ WHERE
     ScoreRank = 1
     AND ClubID = 4    -- EDIT: change to the ClubID you want
 ORDER BY
-    RoundName ASC; 
+    RoundName ASC;
 -- ------------------------------------------------------------------------------------------------
 -- Round definitions (Distances, ends, target faces).
 -- ------------------------------------------------------------------------------------------------

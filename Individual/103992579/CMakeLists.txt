@@ -16,9 +16,16 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${BINARY_OUTPUT_DIRECTORY}/Archive")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${BINARY_OUTPUT_DIRECTORY}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BINARY_OUTPUT_DIRECTORY}")
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+    message(STATUS "Setting default build type to: ${CMAKE_BUILD_TYPE}")
+endif()
+
 project("archery-frontend"
     VERSION 0.0.1
     LANGUAGES CXX C
 )
+
+set(ASSET_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets CACHE INTERNAL "")
 
 add_subdirectory(src)

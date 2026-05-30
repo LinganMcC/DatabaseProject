@@ -1,6 +1,6 @@
 [
   {
-    "label": "CMake Configure (Debug)",
+    "label": "CMake Configure (RelWithDebugInfo)",
     "command": "cmake",
     "args": [
       "-B",
@@ -10,7 +10,7 @@
       "-DCMAKE_C_COMPILER=clang",
       "-DCMAKE_CXX_COMPILER=clang++",
       "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
     ],
     "use_new_terminal": false,
     "allow_concurrent_runs": false,
@@ -25,7 +25,7 @@
   {
     "label": "Cmake: Build and Run",
     "command": "cmd",
-    "args": ["/c", "cmake --build build && ./build/Debug/archery-frontend.exe"],
+    "args": ["/c", "cmake --build build && ./build/RelWithDebInfo/archery-frontend.exe"],
     "use_new_terminal": false,
     "allow_concurrent_runs": false,
   },

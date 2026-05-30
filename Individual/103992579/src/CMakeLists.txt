@@ -47,19 +47,24 @@ add_subdirectory(app)
 target_include_directories(${CMAKE_PROJECT_NAME}
 PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/vender/include
 )
 
 target_compile_definitions(${CMAKE_PROJECT_NAME}
 PRIVATE
+    ASSET_DIRECTORY="${ASSET_DIRECTORY}"
+    STATIC_CONCPP
+    CPPCONN_PUBLIC_FUNC=
+    $<$<CONFIG:RelWithDebInfo>:ENABLE_ASSERTS>
+    $<$<CONFIG:Debug>:ENABLE_ASSERTS>
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}
-PUBLIC
+PRIVATE
     fmt::fmt
     raylib
     raygui
-    ${CMAKE_CURRENT_SOURCE_DIR}/vender/mysql-connector-c++-9.7.0-winx64/lib/vs14/mysqlcppconn-static.lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/vender/lib64/vs14/mysqlcppconn-static.lib
 )
 
 if (MSVC)

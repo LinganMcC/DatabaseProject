@@ -120,9 +120,9 @@ ORDER BY
 
 WITH ChampionshipResult AS (
     SELECT
-        ch.ChampionshipID,
-        ch.ChampionshipName,
-        ch.Year,
+        chp.ChampionshipID,
+        chp.ChampionshipName,
+        chp.Year,
 
         cmp.CompetitionID,
         cmp.CompetitionName,
@@ -133,9 +133,9 @@ WITH ChampionshipResult AS (
         a.LastName,
 
         SUM(ar.Score) AS CompetitionScore
-    FROM Championship ch
+    FROM Championship chp
     JOIN Competition cmp
-        ON cmp.ChampionshipID = ch.ChampionshipID
+        ON cmp.ChampionshipID = chp.ChampionshipID
     JOIN RoundScore rs
         ON rs.CompetitionID = cmp.CompetitionID
     JOIN Archer a
@@ -148,9 +148,9 @@ WITH ChampionshipResult AS (
         rs.IsApproved = TRUE
         AND ch.Year = 2010
     GROUP BY
-        ch.ChampionshipID,
-        ch.ChampionshipName,
-        ch.Year,
+        chp.ChampionshipID,
+        chp.ChampionshipName,
+        chp.Year,
         cmp.CompetitionID,
         cmp.CompetitionName,
         cmp.CompetitionDate,

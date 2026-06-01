@@ -233,7 +233,7 @@ SELECT
     rs.ScoreID,
     a.ArcherID,
     CONCAT(a.FirstName, ' ', a.LastName) AS ArcherName,
-    c.Name AS ClubName,
+    cl.Name AS ClubName,
     br.RoundName AS RoundShot,
     et.Name AS EquipmentUsed,
     rs.`Date`,
@@ -249,8 +249,8 @@ SELECT
 FROM RoundScore rs
 JOIN Archer a
     ON a.ArcherID = rs.ArcherID
-LEFT JOIN Club c
-    ON c.ClubID = a.ClubID
+LEFT JOIN Club cl
+    ON cl.ClubID = a.ClubID
 JOIN BaseRound br
     ON br.BaseRoundID = rs.BaseRoundID
 JOIN EquipmentType et
@@ -267,7 +267,7 @@ GROUP BY
     a.ArcherID,
     a.FirstName,
     a.LastName,
-    c.Name,
+    cl.Name,
     br.RoundName,
     et.Name,
     rs.`Date`,

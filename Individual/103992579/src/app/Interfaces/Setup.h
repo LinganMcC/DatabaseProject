@@ -12,8 +12,9 @@ class SetupInterface : public Interface
 public:
     SetupInterface(Application* app);
 
-    void OnBegin(Interface* prevInterface) override;
+    void Reset() override;
     void OnGUI() override;
+    bool LoadTransitionData(void* transitionData) override;
 
 private:
     void ChooseArcher();

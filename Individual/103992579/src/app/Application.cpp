@@ -41,14 +41,15 @@ void Application::Run()
     }
 }
 
-void Application::SetCurrentInterface(std::string_view name)
+void Application::SetCurrentInterface(std::string_view name, void* transitionData)
 {
     for (unsigned i = 0; i < m_Interfaces.size(); i++)
     {
         if (m_Interfaces[i]->GetName() == name)
         {
-            m_Interfaces[i]->OnBegin(m_Interfaces[m_CurrentInterface].get());
-            m_CurrentInterface = i;
+            m_Interfaces[i]->Reset();
+            if (m_Interfaces[i]->LoadTransitionData(transitionData))
+                m_CurrentInterface = i;
             return;
         }
     }
@@ -88,7 +89,7 @@ void Application::LoadInterfaces()
     m_Interfaces.push_back(std::make_unique<SetupInterface>(this));
     m_Interfaces.push_back(std::make_unique<EnterArrowInterface>(this));
 
-    m_Interfaces[m_CurrentInterface]->OnBegin(nullptr);
+    m_Interfaces[m_CurrentInterface]->Reset();
 }
 
 } // namespace app

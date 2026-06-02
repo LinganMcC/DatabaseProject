@@ -145,9 +145,6 @@ CREATE TABLE Arrow (
 -- Sorting/filtering by Date and Time when Archer = ? - History (2)
 CREATE INDEX Idx_RoundScoreArcherDateTime ON RoundScore(ArcherID, `Date`, `Time`);
 -- Speeds up WHERE br.RoundName = "..." - History (2), Lookup (3, 4)
-CREATE INDEX Idx_BaseRoundName ON BaseRound(RoundName)
+CREATE INDEX Idx_BaseRoundName ON BaseRound(RoundName);
 -- Speeds up when looking at equivalent rounds - Lookup(3)
 CREATE INDEX Idx_EquivalentRound_ValidTo ON EquivalentRound(ValidTo);
-
-
-

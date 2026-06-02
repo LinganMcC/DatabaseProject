@@ -1,4 +1,4 @@
-#include "app/Interfaces/ChooseArcher.h"
+#include "app/Interfaces/Setup.h"
 #include "app/Interfaces/Interface.h"
 
 #include "app/SQL.h"
@@ -6,7 +6,6 @@
 #include "jdbc/cppconn/resultset.h"
 #include "raygui.h"
 #include "raylib.h"
-#include <cstring>
 #include <string_view>
 
 namespace app {
@@ -19,14 +18,14 @@ static constexpr std::string_view QueryArcherExists = //
     "a.FirstName = ? "
     "    AND a.LastName = ?;";
 
-ChooseArcherInterface::ChooseArcherInterface(Application* app)
-    : Interface("Choose Arhcer", 2, app)
+SetupInterface::SetupInterface(Application* app)
+    : Interface("Setup", 2, app)
 {
     m_FirstName[0] = '\0';
     m_LastName[0]  = '\0';
 }
 
-void ChooseArcherInterface::OnBegin()
+void SetupInterface::OnBegin()
 {
     Interface::OnBegin();
 
@@ -36,13 +35,13 @@ void ChooseArcherInterface::OnBegin()
     m_FoundArcher        = 0;
 }
 
-void ChooseArcherInterface::OnGUI()
+void SetupInterface::OnGUI()
 {
     ChooseArcher();
     ChooseRound();
 }
 
-void ChooseArcherInterface::ChooseArcher()
+void SetupInterface::ChooseArcher()
 {
     BeginSection("Choose Archer");
     {
@@ -104,7 +103,7 @@ void ChooseArcherInterface::ChooseArcher()
     EndSection();
 }
 
-void ChooseArcherInterface::ChooseRound()
+void SetupInterface::ChooseRound()
 {
     if (!m_FoundArcher)
         return;

@@ -4,12 +4,12 @@
 
 namespace app {
 
-class ChooseArcherInterface : public Interface
+class SetupInterface : public Interface
 {
     static constexpr unsigned MaxNameInput = 30;
 
 public:
-    ChooseArcherInterface(Application* app);
+    SetupInterface(Application* app);
 
     void OnBegin() override;
     void OnGUI() override;

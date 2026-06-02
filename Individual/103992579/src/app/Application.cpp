@@ -1,9 +1,9 @@
 #include "app/Application.h"
 
 #include "app/Error.h"
-#include "app/Interfaces/ChooseArcher.h"
 #include "app/Interfaces/EnterArrow.h"
 #include "app/Interfaces/Interface.h"
+#include "app/Interfaces/Setup.h"
 
 #include "raygui.h"
 #include "raylib.h"
@@ -75,7 +75,7 @@ void Application::SetupGUI()
 
 void Application::LoadInterfaces()
 {
-    m_Interfaces.push_back(std::make_unique<ChooseArcherInterface>(this));
+    m_Interfaces.push_back(std::make_unique<SetupInterface>(this));
     m_Interfaces.push_back(std::make_unique<EnterArrowInterface>(this));
 }
 

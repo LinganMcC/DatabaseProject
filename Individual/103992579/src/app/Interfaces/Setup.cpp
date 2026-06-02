@@ -1,4 +1,5 @@
 #include "app/Interfaces/Setup.h"
+#include "app/Application.h"
 #include "app/DropdownView.h"
 #include "app/Error.h"
 #include "app/Interfaces/Interface.h"
@@ -88,22 +89,13 @@ void SetupInterface::ChooseArcher()
                 m_FoundArcher = 0;
         }
 
-        Rectangle bounds;
-        bounds.width  = (float)GetScreenWidth() / 3;
-        bounds.height = 40;
-        bounds.x      = GetCenter() - (bounds.width + m_Padding);
-        bounds.y      = m_yOffset;
-
-        if (GuiTextBox(GetButtonBounds(0.0f, 0, 2), m_FirstName, MaxNameInput, IsSelected(0)))
+        if (GuiTextBox(GetBounds(0.0f, 0, 2), m_FirstName, MaxNameInput, IsSelected(0)))
             SetSelection(0);
 
-        // bounds.x = GetCenter() + m_Padding;
-        if (GuiTextBox(GetButtonBounds(0.0f, 1, 2), m_LastName, MaxNameInput, IsSelected(1)))
+        if (GuiTextBox(GetBounds(0.0f, 1, 2), m_LastName, MaxNameInput, IsSelected(1)))
             SetSelection(1);
 
-        // m_yOffset += bounds.height;
-
-        if (GuiButton(GetButtonBounds(), "Find Archer"))
+        if (GuiButton(GetBounds(), "Find Archer"))
         {
             SelectSQL select(QueryArcherExists);
             select.Bind(m_FirstName);
@@ -148,14 +140,18 @@ void SetupInterface::ChooseRound()
     {
         GuiText("Select Equipment", 0, 2);
         GuiText("Select Round", 1, 2);
+
         int lastSelected = m_Equipment.ActiveIndex;
         GuiDropdownView(m_Equipment, 200.0f, 0, 2);
         if (lastSelected != m_Equipment.ActiveIndex)
             LoadAvailableRounds();
 
         GuiDropdownView(m_Rounds, 200.0f, 1, 2);
+
         if (m_Rounds.ActiveIndex != -1)
         {
+            if (GuiButton(GetBounds(), "Enter Arrows"))
+                GetApp()->SetCurrentInterface("Enter Arrow");
         }
     }
     EndSection();

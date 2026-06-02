@@ -1,7 +1,6 @@
 #include "app/DropdownView.h"
 
 #include "raygui.h"
-#include "raylib.h"
 
 namespace app {
 

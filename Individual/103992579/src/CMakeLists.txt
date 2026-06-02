@@ -59,6 +59,11 @@ PRIVATE
     $<$<CONFIG:Debug>:ENABLE_ASSERTS>
 )
 
+target_link_options(${CMAKE_PROJECT_NAME}
+PRIVATE
+    "LINKER:/IGNORE:4099"
+)
+
 target_link_libraries(${CMAKE_PROJECT_NAME}
 PRIVATE
     fmt::fmt

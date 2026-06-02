@@ -67,13 +67,6 @@ void Application::SetupWindow()
 
     SetWindowMinSize(minWidth, minHeight);
 
-    int monitor = GetCurrentMonitor();
-    int width   = GetMonitorWidth(monitor) / 2;
-    int height  = GetMonitorHeight(monitor) / 2;
-
-    SetWindowSize(width, height);
-    SetWindowPosition(width / 2, height / 2); // Center window
-
     SetExitKey(NULL);
     SetTargetFPS(60);
 }

@@ -32,8 +32,9 @@ protected:
                  Color color = WHITE, bool applyOffset = true);
     void GuiDropdownView(DropdownView& view, float height = 0.0f, int column = 0,
                          int columnCount = 1, bool centered = true);
-    Rectangle GetButtonBounds(float height = 0.0f, int column = 0, int columnCount = 1,
-                              bool centered = true, bool applyOffset = true);
+
+    Rectangle GetBounds(float height = 0.0f, int column = 0, int columnCount = 1,
+                        bool centered = true, bool applyOffset = true);
 
     float GetCenter() const;
     float GetMargin() const;

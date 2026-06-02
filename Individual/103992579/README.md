@@ -59,10 +59,9 @@ Copy and paste libcrypto-3-x64.dll and libssl-3-x64.dll into build/RelWithDebInf
 Select Archer & Round Phase
 
 - [x] Choose Archer
-- [ ] Choose Competition (Optional)
-- [ ] Choose Round
-- [ ] Select Bow that they own
-- [ ] Done -> Archer List
+- [x] Choose Round
+- [x] Select Bow that they own
+- [x] Done -> Archer List
 
 Insert arrows and ends
 

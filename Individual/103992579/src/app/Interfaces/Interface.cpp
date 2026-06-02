@@ -52,6 +52,8 @@ void Interface::BeginSection(std::string_view sectionTitle)
 
 void Interface::EndSection(bool toMargin)
 {
+    m_yOffset += m_Padding;
+
     if (!toMargin)
         m_SectionBounds.height = m_yOffset - m_SectionBounds.y;
     GuiGroupBox(m_SectionBounds, m_SectionTitle);
@@ -68,11 +70,11 @@ void Interface::GuiText(std::string_view text, int column, int columnCount, floa
     Font font    = GuiGetFont();
     int fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
 
-    Rectangle bounds = GetButtonBounds(0.0f, column, columnCount, centered, false);
+    Rectangle bounds = GetBounds(0.0f, column, columnCount, centered, false);
     Vector2 size     = MeasureTextEx(font, text.data(), fontSize, 0);
     Vector2 pos{
         .x = (bounds.x + bounds.width * 0.5f) - size.x * 0.5f,
-        .y = m_yOffset,
+        .y = bounds.y,
     };
 
     DrawTextEx(GuiGetFont(), text.data(), pos, fontSize, 0, color);
@@ -83,7 +85,7 @@ void Interface::GuiText(std::string_view text, int column, int columnCount, floa
 void Interface::GuiDropdownView(DropdownView& view, float height, int column, int columnCount,
                                 bool centered)
 {
-    Rectangle bounds = GetButtonBounds(height, column, columnCount, centered);
+    Rectangle bounds = GetBounds(height, column, columnCount, centered);
     int focus        = -1;
     GuiListViewEx(bounds,
                   const_cast<const char**>(view.Names.data()),
@@ -93,8 +95,8 @@ void Interface::GuiDropdownView(DropdownView& view, float height, int column, in
                   &focus);
 }
 
-Rectangle Interface::GetButtonBounds(float height, int column, int columnCount, bool centered,
-                                     bool applyOffset)
+Rectangle Interface::GetBounds(float height, int column, int columnCount, bool centered,
+                               bool applyOffset)
 {
     height = height == 0.0f ? m_ButtonHeight : height;
     float width =
@@ -108,18 +110,17 @@ Rectangle Interface::GetButtonBounds(float height, int column, int columnCount, 
     };
 
     float offset = column * (bounds.width + m_Padding);
-
     if (centered)
     {
-        float totalRowWidth = (columnCount * bounds.width) + ((columnCount - 1) * m_Padding);
-        float centerOffset  = totalRowWidth * 0.5f;
-        bounds.x            = GetCenter() - centerOffset + offset;
+        float totalColumnWidth = (columnCount * bounds.width) + ((columnCount - 1) * m_Padding);
+        float centerOffset     = totalColumnWidth * 0.5f;
+        bounds.x               = GetCenter() - centerOffset + offset;
     }
     else
         bounds.x = GetMargin() + m_Padding + offset;
 
     if (applyOffset && column == columnCount - 1)
-        m_yOffset += height + 2 * m_Padding;
+        m_yOffset += height + m_Padding;
 
     return bounds;
 }

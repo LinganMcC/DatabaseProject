@@ -1,9 +1,8 @@
-#include "app/Interfaces/Setup.h"
+#include "app/interface/Setup.h"
 #include "app/Application.h"
-#include "app/Database.h"
 #include "app/DropdownView.h"
 #include "app/Error.h"
-#include "app/Interfaces/Interface.h"
+#include "app/InterfaceShared.h"
 
 #include "app/SQL.h"
 #include "jdbc/cppconn/prepared_statement.h"
@@ -70,11 +69,6 @@ void SetupInterface::OnGUI()
 
     if (GuiButton(GetBounds(), "Clear"))
         Reset();
-}
-
-bool SetupInterface::LoadTransitionData(void* transitionData)
-{
-    return true;
 }
 
 void SetupInterface::ChooseArcher()

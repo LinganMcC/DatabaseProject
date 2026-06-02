@@ -54,15 +54,52 @@ Copy and paste libcrypto-3-x64.dll and libssl-3-x64.dll into build/RelWithDebInf
 - Run:
     - Execute `./build/RelWithDebInfo/archery-frontend.exe`.
 
-# Feature Checklist
+# Check that the insert statements worked
 
-Select Archer & Round Phase
+**_Check latest Score Inserts:_**
 
-- [x] Choose Archer
-- [x] Choose Round
-- [x] Select Bow that they own
-- [x] Done -> Archer List
+```sql
+SELECT
+    rs.ScoreID,
+    a.FirstName,
+    a.LastName,
+    br.RoundName,
+    et.Name AS Equipment,
+    rs.Date,
+    rs.Time
+FROM RoundScore rs
+JOIN Archer a ON rs.ArcherID = a.ArcherID
+JOIN BaseRound br ON rs.BaseRoundID = br.BaseRoundID
+JOIN EquipmentType et ON rs.EquipmentID = et.EquipmentID
+ORDER BY rs.ScoreID DESC
+LIMIT 5;
+```
 
-Insert arrows and ends
+**_Check the arrow scores per end:_**
 
-- [ ] Default to Setup Phase page
+```sql
+SELECT
+    rs.ScoreID,
+    e.Position AS EndNumber,
+    GROUP_CONCAT(
+        CASE
+            WHEN ar.Score = 11 THEN 'X'
+            WHEN ar.Score = 0 THEN 'M'
+            ELSE ar.Score
+        END
+        ORDER BY ar.ArrowID ASC
+        SEPARATOR ', '
+    ) AS Arrows,
+    SUM(
+        CASE
+            WHEN ar.Score = 11 THEN 10
+            ELSE ar.Score
+        END
+    ) AS EndTotal
+FROM RoundScore rs
+JOIN `End` e ON rs.ScoreID = e.ScoreID
+JOIN Arrow ar ON e.EndID = ar.EndID
+WHERE rs.ScoreID = (SELECT MAX(ScoreID) FROM RoundScore)
+GROUP BY rs.ScoreID, e.EndID, e.Position
+ORDER BY e.Position ASC;
+```

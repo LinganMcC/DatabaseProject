@@ -1,10 +1,12 @@
 #include "app/Application.h"
 
 #include "app/Error.h"
-#include "app/Interfaces/EnterArrow.h"
-#include "app/Interfaces/Interface.h"
-#include "app/Interfaces/Setup.h"
+#include "app/interface/EnterArrow.h"
+#include "app/interface/Interface.h"
+#include "app/interface/Setup.h"
+#include "app/interface/Success.h"
 
+#include "app/interface/Success.h"
 #include "raygui.h"
 #include "raylib.h"
 #include <memory>
@@ -88,6 +90,7 @@ void Application::LoadInterfaces()
 {
     m_Interfaces.push_back(std::make_unique<SetupInterface>(this));
     m_Interfaces.push_back(std::make_unique<EnterArrowInterface>(this));
+    m_Interfaces.push_back(std::make_unique<SuccessInterface>(this));
 
     m_Interfaces[m_CurrentInterface]->Reset();
 }

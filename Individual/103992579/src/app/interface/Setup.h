@@ -1,7 +1,7 @@
 #pragma once
 
 #include "app/DropdownView.h"
-#include "app/Interfaces/Interface.h"
+#include "app/interface/Interface.h"
 
 namespace app {
 
@@ -14,7 +14,6 @@ public:
 
     void Reset() override;
     void OnGUI() override;
-    bool LoadTransitionData(void* transitionData) override;
 
 private:
     void ChooseArcher();

@@ -1,4 +1,4 @@
-#include "app/Interfaces/Interface.h"
+#include "app/interface/Interface.h"
 
 #include "fmt/base.h"
 #include "raygui.h"
@@ -17,6 +17,11 @@ Interface::Interface(std::string_view name, unsigned selectionCount, Application
 void Interface::Reset()
 {
     m_SelectedIndex = 0;
+}
+
+bool Interface::LoadTransitionData(void* transitionData)
+{
+    return true;
 }
 
 void Interface::HandleSelectionIndex()

@@ -17,8 +17,8 @@ public:
     virtual ~Interface() = default;
 
     virtual void Reset();
-    virtual void OnGUI()                                  = 0;
-    virtual bool LoadTransitionData(void* transitionData) = 0;
+    virtual bool LoadTransitionData(void* transitionData);
+    virtual void OnGUI() = 0;
 
     void HandleSelectionIndex();
     void ResetOffsetY();

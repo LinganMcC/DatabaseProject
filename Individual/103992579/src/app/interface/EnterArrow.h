@@ -1,6 +1,6 @@
 #pragma once
 
-#include "app/Interfaces/Interface.h"
+#include "app/interface/Interface.h"
 
 #include <vector>
 
@@ -32,10 +32,12 @@ public:
     bool LoadTransitionData(void* transitionData) override;
 
 private:
-    void DrawHeader();
-    void DrawScoreSlots();
-    void DrawKeypad();
-    void DrawActionButtons();
+    void Header();
+    void ScoreSlots();
+    void Keypad();
+    void ActionButtons();
+
+    bool PushToDatabase();
 
     void AddSCore(int scoreValue);
     std::string GetScoreString(int scoreValue) const;

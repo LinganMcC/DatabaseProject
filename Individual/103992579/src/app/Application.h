@@ -1,6 +1,6 @@
 #pragma once
 
-#include "app/Interfaces/Interface.h"
+#include "app/interface/Interface.h"
 
 #include "raylib.h"
 #include <memory>

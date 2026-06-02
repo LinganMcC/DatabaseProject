@@ -100,3 +100,16 @@ The purpose of this submission is to provide evidence of your work during this s
 - [x] Round Definitions: Store historical and current valid date ranges. Round info: number of Ends and equivalent round mapping.
 - [x] Archer Accounts: Store core identity (name, age, gender) and default equipment preferences.
 - [x] Score Staging: Archers append their competition entry containing: date, time, round, and equipment, while the recorder adds their recorded score for comparison.
+
+## Report Task Delegation
+
+- [x] Initial ER diagram (Week 4)
+- [x] Review of ER diagram to normalise/denormalise, revise relationships (Week 5), possible subsequent reviews (e.g. adjustments due to use cases)
+- [x] Physical database (Week 6) - Create Table statements
+- [ ] Document on data creation and null values (Week 7) *Ewan / Liam*
+- [ ] Use cases and SQL statements, transactions (Week 8) *Everyones respective queries*
+- [ ] Performance (indexes) (Week 9) *Hoang* 
+- [ ] Major-specific work (naming the contributor) (Week 10 + 11) *Everyones respective Major-specific work*
+- [ ] Team reflection (4L RetrospectiveLinks to an external site.) (Week 12) *Everyone (we need to hop on call)*
+- [x] Task management (all weeks)
+- [x] Meeting minutes (all weeks)

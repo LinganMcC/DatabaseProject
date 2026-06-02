@@ -41,14 +41,31 @@ void Application::Run()
     }
 }
 
+void Application::SetCurrentInterface(std::string_view name)
+{
+    for (unsigned i = 0; i < m_Interfaces.size(); i++)
+    {
+        if (m_Interfaces[i]->GetName() == name)
+        {
+            m_Interfaces[i]->OnBegin(m_Interfaces[m_CurrentInterface].get());
+            m_CurrentInterface = i;
+            return;
+        }
+    }
+    FATAL("Failed to load {} Interface, doesn't exist", name);
+}
+
 void Application::SetupWindow()
 {
+    int minWidth  = 640;
+    int minHeight = 960;
+
     SetTraceLogLevel(LOG_WARNING);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(0, 0, "Archery Entry App");
+    InitWindow(minWidth, minHeight, "Archery Entry App");
     ASSERT(IsWindowReady(), "Failed to initialize Raylib's window for some reason");
 
-    SetWindowMinSize(270, 600);
+    SetWindowMinSize(minWidth, minHeight);
 
     int monitor = GetCurrentMonitor();
     int width   = GetMonitorWidth(monitor) / 2;
@@ -77,19 +94,8 @@ void Application::LoadInterfaces()
 {
     m_Interfaces.push_back(std::make_unique<SetupInterface>(this));
     m_Interfaces.push_back(std::make_unique<EnterArrowInterface>(this));
-}
 
-void Application::SetCurrentInterface(std::string_view name)
-{
-    for (unsigned i = 0; i < m_Interfaces.size(); i++)
-    {
-        if (m_Interfaces[i]->GetName() == name)
-        {
-            m_CurrentInterface = i;
-            return;
-        }
-    }
-    FATAL("Failed to load {} Interface, doesn't exist", name);
+    m_Interfaces[m_CurrentInterface]->OnBegin(nullptr);
 }
 
 } // namespace app

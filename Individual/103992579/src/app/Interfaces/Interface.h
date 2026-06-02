@@ -1,5 +1,6 @@
 #pragma once
 
+#include "app/DropdownView.h"
 #include "raylib.h"
 #include <string>
 
@@ -15,7 +16,7 @@ public:
     Interface(std::string_view name, unsigned selectionCount, Application* app);
     virtual ~Interface() = default;
 
-    virtual void OnBegin();
+    virtual void OnBegin(Interface* prevInterface);
     virtual void OnGUI() = 0;
     void HandleSelectionIndex();
     void ResetOffsetY();
@@ -26,7 +27,13 @@ public:
 protected:
     void BeginSection(std::string_view title);
     void EndSection(bool toMargin = false);
-    void GuiText(std::string_view text, Color color = WHITE);
+
+    void GuiText(std::string_view text, int column = 0, int columnCount = 1, float centered = true,
+                 Color color = WHITE, bool applyOffset = true);
+    void GuiDropdownView(DropdownView& view, float height = 0.0f, int column = 0,
+                         int columnCount = 1, bool centered = true);
+    Rectangle GetButtonBounds(float height = 0.0f, int column = 0, int columnCount = 1,
+                              bool centered = true, bool applyOffset = true);
 
     float GetCenter() const;
     float GetMargin() const;
@@ -34,8 +41,6 @@ protected:
     bool IsSelected(unsigned index) const;
     void IncrementSelection();
     void SetSelection(unsigned index);
-
-    Rectangle GetButtonBounds(bool centered = true, int index = 0, int rowCount = 1);
 
     float m_ButtonHeight = 40.0f;
     float m_yOffset      = 0.0f;

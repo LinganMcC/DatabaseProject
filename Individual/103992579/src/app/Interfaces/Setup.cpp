@@ -1,38 +1,74 @@
 #include "app/Interfaces/Setup.h"
+#include "app/DropdownView.h"
+#include "app/Error.h"
 #include "app/Interfaces/Interface.h"
 
 #include "app/SQL.h"
+#include "fmt/base.h"
 #include "jdbc/cppconn/prepared_statement.h"
 #include "jdbc/cppconn/resultset.h"
+#include "jdbc/cppconn/sqlstring.h"
 #include "raygui.h"
 #include "raylib.h"
+#include <array>
 #include <string_view>
 
 namespace app {
 
+static constexpr std::array<std::string_view, 6> EquipmentNames = {
+    "Recurve",
+    "Compound",
+    "Recurve Barebow",
+    "Compound Barebow",
+    "Longbow",
+};
+
 static constexpr std::string_view QueryArcherExists = //
-    "SELECT "
-    "COUNT(*) "
-    "FROM Archer a "
-    "WHERE "
-    "a.FirstName = ? "
-    "    AND a.LastName = ?;";
+    R"(
+SELECT
+    DefaultEquipmentID
+FROM Archer
+WHERE
+    FirstName = ?
+    AND LastName = ?;
+    )";
+
+static constexpr std::string_view QueryRoundNames = //
+    R"(
+SELECT
+    br.RoundName
+FROM BaseRound br
+WHERE EXISTS (
+    SELECT 1
+    FROM EquivalentRound eqr
+    WHERE eqr.BaseRoundID = br.BaseRoundID
+      AND eqr.EquipmentID = ?
+)
+ORDER BY
+    br.RoundName;
+    )";
 
 SetupInterface::SetupInterface(Application* app)
-    : Interface("Setup", 2, app)
+    : Interface("Setup", 3, app)
 {
     m_FirstName[0] = '\0';
     m_LastName[0]  = '\0';
+
+    for (const std::string_view& equipment : EquipmentNames)
+        m_Equipment.AddEntry(equipment);
 }
 
-void SetupInterface::OnBegin()
+void SetupInterface::OnBegin(Interface* prevInterface)
 {
-    Interface::OnBegin();
+    Interface::OnBegin(nullptr);
 
-    m_FirstName[0]       = '\0';
-    m_LastName[0]        = '\0';
-    m_ShowArcherNotFound = false;
-    m_FoundArcher        = 0;
+    m_FirstName[0]          = '\0';
+    m_LastName[0]           = '\0';
+    m_ShowArcherNotFound    = false;
+    m_FoundArcher           = 0;
+    m_Equipment.ActiveIndex = -1;
+
+    m_Rounds.Clear();
 }
 
 void SetupInterface::OnGUI()
@@ -58,47 +94,47 @@ void SetupInterface::ChooseArcher()
         bounds.x      = GetCenter() - (bounds.width + m_Padding);
         bounds.y      = m_yOffset;
 
-        if (GuiTextBox(bounds, m_FirstName, MaxNameInput, IsSelected(0)))
+        if (GuiTextBox(GetButtonBounds(0.0f, 0, 2), m_FirstName, MaxNameInput, IsSelected(0)))
             SetSelection(0);
 
-        bounds.x = GetCenter() + m_Padding;
-        if (GuiTextBox(bounds, m_LastName, MaxNameInput, IsSelected(1)))
+        // bounds.x = GetCenter() + m_Padding;
+        if (GuiTextBox(GetButtonBounds(0.0f, 1, 2), m_LastName, MaxNameInput, IsSelected(1)))
             SetSelection(1);
 
-        m_yOffset += bounds.height;
+        // m_yOffset += bounds.height;
 
-        if (GuiButton(GetButtonBounds(), "Find Archer") || IsKeyPressed(KEY_ENTER))
+        if (GuiButton(GetButtonBounds(), "Find Archer"))
         {
             SelectSQL select(QueryArcherExists);
-            select.BindString(m_FirstName);
-            select.BindString(m_LastName);
+            select.Bind(m_FirstName);
+            select.Bind(m_LastName);
 
             if (select.Execute())
             {
-                bool found = false;
+                m_Equipment.ActiveIndex = -1;
                 if (select.GetResults()->next())
                 {
-                    int count = select.GetResults()->getInt(1);
-                    found     = count > 0;
+                    m_Equipment.ActiveIndex = select.GetResults()->getInt(1) - 1;
                 }
 
-                if (found)
+                if (m_Equipment.ActiveIndex != -1)
                 {
                     m_FoundArcher        = std::strlen(m_FirstName) + std::strlen(m_LastName);
                     m_ShowArcherNotFound = false;
+                    SetSelection(99);
+
+                    LoadAvailableRounds();
                 }
                 else
                 {
-                    OnBegin();
+                    OnBegin(nullptr);
                     m_ShowArcherNotFound = true;
                 }
             }
         }
 
         if (m_ShowArcherNotFound)
-        {
-            GuiText("Archer doesn't exist", RED);
-        }
+            GuiText("Archer doesn't exist", 0, 1, true, RED);
     }
     EndSection();
 }
@@ -110,9 +146,40 @@ void SetupInterface::ChooseRound()
 
     BeginSection("Choose Round");
     {
-        m_yOffset += 20;
+        GuiText("Select Equipment", 0, 2);
+        GuiText("Select Round", 1, 2);
+        int lastSelected = m_Equipment.ActiveIndex;
+        GuiDropdownView(m_Equipment, 200.0f, 0, 2);
+        if (lastSelected != m_Equipment.ActiveIndex)
+            LoadAvailableRounds();
+
+        GuiDropdownView(m_Rounds, 200.0f, 1, 2);
+        if (m_Rounds.ActiveIndex != -1)
+        {
+        }
     }
     EndSection();
+}
+
+void SetupInterface::LoadAvailableRounds()
+{
+    ASSERT(m_Equipment.ActiveIndex != -1,
+           "Cannot call this function if the equipment ID has not been set");
+
+    m_Rounds.Clear();
+
+    SelectSQL select(QueryRoundNames);
+    select.Bind(m_Equipment.ActiveIndex + 1);
+
+    if (!select.Execute())
+        FATAL("Failed to execute Query:\n{}\n", QueryRoundNames);
+
+    sql::ResultSet* results = select.GetResults();
+    if (!results)
+        FATAL("Failed");
+
+    while (results->next())
+        m_Rounds.AddEntry(results->getString(1).c_str());
 }
 
 } // namespace app

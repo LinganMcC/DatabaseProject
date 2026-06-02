@@ -1,5 +1,4 @@
 #include "app/Interfaces/Interface.h"
-#include "app/Error.h"
 
 #include "fmt/base.h"
 #include "raygui.h"
@@ -15,7 +14,7 @@ Interface::Interface(std::string_view name, unsigned selectionCount, Application
 {
 }
 
-void Interface::OnBegin()
+void Interface::OnBegin(Interface* prevInterface)
 {
     m_SelectedIndex = 0;
 }
@@ -60,23 +59,69 @@ void Interface::EndSection(bool toMargin)
     m_yOffset += 2 * m_Padding;
 }
 
-void Interface::GuiText(std::string_view text, Color color)
+void Interface::GuiText(std::string_view text, int column, int columnCount, float centered,
+                        Color color, bool applyOffset)
 {
-
     if (color.r == 255 && color.g == 255 && color.b == 255)
         color = GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL));
 
     Font font    = GuiGetFont();
     int fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
 
-    Vector2 size = MeasureTextEx(font, text.data(), fontSize, 0);
+    Rectangle bounds = GetButtonBounds(0.0f, column, columnCount, centered, false);
+    Vector2 size     = MeasureTextEx(font, text.data(), fontSize, 0);
     Vector2 pos{
-        .x = GetCenter() - size.x * 0.5f,
+        .x = (bounds.x + bounds.width * 0.5f) - size.x * 0.5f,
         .y = m_yOffset,
     };
 
     DrawTextEx(GuiGetFont(), text.data(), pos, fontSize, 0, color);
-    m_yOffset += size.y + m_Padding;
+    if (applyOffset && column == columnCount - 1)
+        m_yOffset += size.y + m_Padding;
+}
+
+void Interface::GuiDropdownView(DropdownView& view, float height, int column, int columnCount,
+                                bool centered)
+{
+    Rectangle bounds = GetButtonBounds(height, column, columnCount, centered);
+    int focus        = -1;
+    GuiListViewEx(bounds,
+                  const_cast<const char**>(view.Names.data()),
+                  (int)view.Names.size(),
+                  &view.ScrollIndex,
+                  &view.ActiveIndex,
+                  &focus);
+}
+
+Rectangle Interface::GetButtonBounds(float height, int column, int columnCount, bool centered,
+                                     bool applyOffset)
+{
+    height = height == 0.0f ? m_ButtonHeight : height;
+    float width =
+        GetScreenWidth() - 2 * (GetMargin() + m_Padding) - ((columnCount - 1) * m_Padding);
+
+    Rectangle bounds{
+        .x      = 0,
+        .y      = m_yOffset + m_Padding,
+        .width  = width / columnCount,
+        .height = height,
+    };
+
+    float offset = column * (bounds.width + m_Padding);
+
+    if (centered)
+    {
+        float totalRowWidth = (columnCount * bounds.width) + ((columnCount - 1) * m_Padding);
+        float centerOffset  = totalRowWidth * 0.5f;
+        bounds.x            = GetCenter() - centerOffset + offset;
+    }
+    else
+        bounds.x = GetMargin() + m_Padding + offset;
+
+    if (applyOffset && column == columnCount - 1)
+        m_yOffset += height + 2 * m_Padding;
+
+    return bounds;
 }
 
 float Interface::GetCenter() const
@@ -96,36 +141,7 @@ bool Interface::IsSelected(unsigned index) const
 
 void Interface::SetSelection(unsigned index)
 {
-    if (index < m_MaxSelectionCount)
-    {
-        m_SelectedIndex = index;
-        return;
-    }
-
-    ERROR("Selection index ({}) must be less than selection max count ({})",
-          index,
-          m_MaxSelectionCount);
-}
-
-Rectangle Interface::GetButtonBounds(bool centered, int index, int rowCount)
-{
-    Rectangle bounds;
-    bounds.width  = (float)GetScreenWidth() / 4;
-    bounds.height = m_ButtonHeight;
-    bounds.y      = m_yOffset + m_Padding;
-
-    float offset = index * (bounds.width + m_Padding);
-    if (centered)
-    {
-        float centerOffset = (rowCount * bounds.width) * 0.5f;
-        bounds.x           = GetCenter() - centerOffset + offset;
-    }
-    else
-        bounds.x = GetMargin() + offset;
-
-    m_yOffset += m_ButtonHeight + 2 * m_Padding;
-
-    return bounds;
+    m_SelectedIndex = index;
 }
 
 } // namespace app

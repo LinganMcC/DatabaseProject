@@ -18,7 +18,10 @@ public:
     SQL(std::string_view preparedStatement);
     virtual ~SQL();
 
-    void BindString(std::string_view str);
+    void LoadStatement(std::string_view preparedStatement);
+    void Bind(std::string_view str);
+    void Bind(unsigned int val);
+
     virtual bool Execute() = 0;
 
 protected:

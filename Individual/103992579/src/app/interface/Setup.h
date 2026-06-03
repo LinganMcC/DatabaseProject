@@ -1,7 +1,7 @@
 #pragma once
 
 #include "app/DropdownView.h"
-#include "app/Interfaces/Interface.h"
+#include "app/interface/Interface.h"
 
 namespace app {
 
@@ -12,7 +12,7 @@ class SetupInterface : public Interface
 public:
     SetupInterface(Application* app);
 
-    void OnBegin(Interface* prevInterface) override;
+    void Reset() override;
     void OnGUI() override;
 
 private:

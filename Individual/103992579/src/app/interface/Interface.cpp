@@ -1,4 +1,4 @@
-#include "app/Interfaces/Interface.h"
+#include "app/interface/Interface.h"
 
 #include "fmt/base.h"
 #include "raygui.h"
@@ -14,9 +14,14 @@ Interface::Interface(std::string_view name, unsigned selectionCount, Application
 {
 }
 
-void Interface::OnBegin(Interface* prevInterface)
+void Interface::Reset()
 {
     m_SelectedIndex = 0;
+}
+
+bool Interface::LoadTransitionData(void* transitionData)
+{
+    return true;
 }
 
 void Interface::HandleSelectionIndex()
@@ -70,7 +75,7 @@ void Interface::GuiText(std::string_view text, int column, int columnCount, floa
     Font font    = GuiGetFont();
     int fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
 
-    Rectangle bounds = GetBounds(0.0f, column, columnCount, centered, false);
+    Rectangle bounds = GetBounds(column, columnCount, 0.0f, centered, false);
     Vector2 size     = MeasureTextEx(font, text.data(), fontSize, 0);
     Vector2 pos{
         .x = (bounds.x + bounds.width * 0.5f) - size.x * 0.5f,
@@ -82,10 +87,10 @@ void Interface::GuiText(std::string_view text, int column, int columnCount, floa
         m_yOffset += size.y + m_Padding;
 }
 
-void Interface::GuiDropdownView(DropdownView& view, float height, int column, int columnCount,
+void Interface::GuiDropdownView(DropdownView& view, int column, int columnCount, float height,
                                 bool centered)
 {
-    Rectangle bounds = GetBounds(height, column, columnCount, centered);
+    Rectangle bounds = GetBounds(column, columnCount, height, centered);
     int focus        = -1;
     GuiListViewEx(bounds,
                   const_cast<const char**>(view.Names.data()),
@@ -95,7 +100,7 @@ void Interface::GuiDropdownView(DropdownView& view, float height, int column, in
                   &focus);
 }
 
-Rectangle Interface::GetBounds(float height, int column, int columnCount, bool centered,
+Rectangle Interface::GetBounds(int column, int columnCount, float height, bool centered,
                                bool applyOffset)
 {
     height = height == 0.0f ? m_ButtonHeight : height;

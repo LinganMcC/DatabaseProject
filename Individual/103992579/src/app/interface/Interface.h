@@ -16,8 +16,10 @@ public:
     Interface(std::string_view name, unsigned selectionCount, Application* app);
     virtual ~Interface() = default;
 
-    virtual void OnBegin(Interface* prevInterface);
+    virtual void Reset();
+    virtual bool LoadTransitionData(void* transitionData);
     virtual void OnGUI() = 0;
+
     void HandleSelectionIndex();
     void ResetOffsetY();
 
@@ -30,10 +32,10 @@ protected:
 
     void GuiText(std::string_view text, int column = 0, int columnCount = 1, float centered = true,
                  Color color = WHITE, bool applyOffset = true);
-    void GuiDropdownView(DropdownView& view, float height = 0.0f, int column = 0,
-                         int columnCount = 1, bool centered = true);
+    void GuiDropdownView(DropdownView& view, int column = 0, int columnCount = 1,
+                         float height = 0.0f, bool centered = true);
 
-    Rectangle GetBounds(float height = 0.0f, int column = 0, int columnCount = 1,
+    Rectangle GetBounds(int column = 0, int columnCount = 1, float height = 0.0f,
                         bool centered = true, bool applyOffset = true);
 
     float GetCenter() const;

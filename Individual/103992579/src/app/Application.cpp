@@ -1,10 +1,12 @@
 #include "app/Application.h"
 
 #include "app/Error.h"
-#include "app/Interfaces/EnterArrow.h"
-#include "app/Interfaces/Interface.h"
-#include "app/Interfaces/Setup.h"
+#include "app/interface/EnterArrow.h"
+#include "app/interface/Interface.h"
+#include "app/interface/Setup.h"
+#include "app/interface/Success.h"
 
+#include "app/interface/Success.h"
 #include "raygui.h"
 #include "raylib.h"
 #include <memory>
@@ -41,14 +43,15 @@ void Application::Run()
     }
 }
 
-void Application::SetCurrentInterface(std::string_view name)
+void Application::SetCurrentInterface(std::string_view name, void* transitionData)
 {
     for (unsigned i = 0; i < m_Interfaces.size(); i++)
     {
         if (m_Interfaces[i]->GetName() == name)
         {
-            m_Interfaces[i]->OnBegin(m_Interfaces[m_CurrentInterface].get());
-            m_CurrentInterface = i;
+            m_Interfaces[i]->Reset();
+            if (m_Interfaces[i]->LoadTransitionData(transitionData))
+                m_CurrentInterface = i;
             return;
         }
     }
@@ -87,8 +90,9 @@ void Application::LoadInterfaces()
 {
     m_Interfaces.push_back(std::make_unique<SetupInterface>(this));
     m_Interfaces.push_back(std::make_unique<EnterArrowInterface>(this));
+    m_Interfaces.push_back(std::make_unique<SuccessInterface>(this));
 
-    m_Interfaces[m_CurrentInterface]->OnBegin(nullptr);
+    m_Interfaces[m_CurrentInterface]->Reset();
 }
 
 } // namespace app

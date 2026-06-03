@@ -1,30 +1,20 @@
-#include "app/Interfaces/Setup.h"
+#include "app/interface/Setup.h"
 #include "app/Application.h"
 #include "app/DropdownView.h"
 #include "app/Error.h"
-#include "app/Interfaces/Interface.h"
+#include "app/InterfaceShared.h"
 
 #include "app/SQL.h"
-#include "fmt/base.h"
 #include "jdbc/cppconn/prepared_statement.h"
 #include "jdbc/cppconn/resultset.h"
 #include "jdbc/cppconn/sqlstring.h"
 #include "raygui.h"
 #include "raylib.h"
-#include <array>
 #include <string_view>
 
 namespace app {
 
-static constexpr std::array<std::string_view, 6> EquipmentNames = {
-    "Recurve",
-    "Compound",
-    "Recurve Barebow",
-    "Compound Barebow",
-    "Longbow",
-};
-
-static constexpr std::string_view QueryArcherExists = //
+static constexpr std::string_view QueryArcherExists =
     R"(
 SELECT
     DefaultEquipmentID
@@ -34,7 +24,7 @@ WHERE
     AND LastName = ?;
     )";
 
-static constexpr std::string_view QueryRoundNames = //
+static constexpr std::string_view QueryRoundNames =
     R"(
 SELECT
     br.RoundName
@@ -59,9 +49,9 @@ SetupInterface::SetupInterface(Application* app)
         m_Equipment.AddEntry(equipment);
 }
 
-void SetupInterface::OnBegin(Interface* prevInterface)
+void SetupInterface::Reset()
 {
-    Interface::OnBegin(nullptr);
+    Interface::Reset();
 
     m_FirstName[0]          = '\0';
     m_LastName[0]           = '\0';
@@ -76,6 +66,9 @@ void SetupInterface::OnGUI()
 {
     ChooseArcher();
     ChooseRound();
+
+    if (GuiButton(GetBounds(), "Clear"))
+        Reset();
 }
 
 void SetupInterface::ChooseArcher()
@@ -89,10 +82,10 @@ void SetupInterface::ChooseArcher()
                 m_FoundArcher = 0;
         }
 
-        if (GuiTextBox(GetBounds(0.0f, 0, 2), m_FirstName, MaxNameInput, IsSelected(0)))
+        if (GuiTextBox(GetBounds(0, 2), m_FirstName, MaxNameInput, IsSelected(0)))
             SetSelection(0);
 
-        if (GuiTextBox(GetBounds(0.0f, 1, 2), m_LastName, MaxNameInput, IsSelected(1)))
+        if (GuiTextBox(GetBounds(1, 2), m_LastName, MaxNameInput, IsSelected(1)))
             SetSelection(1);
 
         if (GuiButton(GetBounds(), "Find Archer"))
@@ -119,7 +112,7 @@ void SetupInterface::ChooseArcher()
                 }
                 else
                 {
-                    OnBegin(nullptr);
+                    Reset();
                     m_ShowArcherNotFound = true;
                 }
             }
@@ -142,16 +135,24 @@ void SetupInterface::ChooseRound()
         GuiText("Select Round", 1, 2);
 
         int lastSelected = m_Equipment.ActiveIndex;
-        GuiDropdownView(m_Equipment, 200.0f, 0, 2);
+        GuiDropdownView(m_Equipment, 0, 2, 200.0f);
         if (lastSelected != m_Equipment.ActiveIndex)
             LoadAvailableRounds();
 
-        GuiDropdownView(m_Rounds, 200.0f, 1, 2);
+        GuiDropdownView(m_Rounds, 1, 2, 200.0f);
 
         if (m_Rounds.ActiveIndex != -1)
         {
             if (GuiButton(GetBounds(), "Enter Arrows"))
-                GetApp()->SetCurrentInterface("Enter Arrow");
+            {
+                TransitionToEnterArrowDataPackage package{
+                    .firstName   = m_FirstName,
+                    .lastName    = m_LastName,
+                    .roundName   = m_Rounds.Names[m_Rounds.ActiveIndex],
+                    .equipmentID = m_Equipment.ActiveIndex,
+                };
+                GetApp()->SetCurrentInterface("Enter Arrow", &package);
+            }
         }
     }
     EndSection();

@@ -146,7 +146,7 @@ WITH ChampionshipResult AS (
         ON ar.EndID = e.EndID
     WHERE
         rs.IsApproved = TRUE
-        AND ch.Year = 2010
+        AND chp.Year = 2010
     GROUP BY
         chp.ChampionshipID,
         chp.ChampionshipName,

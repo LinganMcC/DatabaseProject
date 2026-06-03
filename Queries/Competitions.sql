@@ -118,7 +118,9 @@ ORDER BY
 -- This prevents unapproved or staged scores from being counted in the championship results.
 -- ------------------------------------------------------------------------------------------------
 
-WITH ChampionshipResult AS (
+WITH ChampionshipResult AS (  -- CTE to calculate total score for each 
+                              -- archer in each competition that belongs 
+                              -- to the championship
     SELECT
         chp.ChampionshipID,
         chp.ChampionshipName,
@@ -132,7 +134,7 @@ WITH ChampionshipResult AS (
         a.FirstName,
         a.LastName,
 
-        SUM(ar.Score) AS CompetitionScore
+        SUM(ar.Score) AS CompetitionScore   -- Total score for each archer in each competition that belongs to the championship
     FROM Championship chp
     JOIN Competition cmp
         ON cmp.ChampionshipID = chp.ChampionshipID
@@ -146,7 +148,7 @@ WITH ChampionshipResult AS (
         ON ar.EndID = e.EndID
     WHERE
         rs.IsApproved = TRUE
-        AND chp.Year = 2010
+        AND chp.Year = 2010  --  EDIT YEAR HERE: Change the year to view different championship results
     GROUP BY
         chp.ChampionshipID,
         chp.ChampionshipName,
@@ -167,7 +169,7 @@ ArcherChampionshipTotal AS (
         ArcherID,
         FirstName,
         LastName,
-        SUM(CompetitionScore) AS ChampionshipTotalScore
+        SUM(CompetitionScore) AS ChampionshipTotalScore  -- Total score for each archer across all competitions that belong to the championship
     FROM ChampionshipResult
     GROUP BY
         ChampionshipID,
@@ -187,20 +189,20 @@ RankedChampionship AS (
         LastName,
         ChampionshipTotalScore,
 
-        RANK() OVER (
+        RANK() OVER (  -- Rank archers based on their total championship score, with ties receiving the same rank
             PARTITION BY ChampionshipID
             ORDER BY ChampionshipTotalScore DESC
-        ) AS ChampionshipRank
+        ) AS ChampionshipRank  -- Rank of each archer within the championship based on total score
     FROM ArcherChampionshipTotal
 )
 
 SELECT
     ChampionshipName,
     Year,
-    ChampionshipRank,
+    ChampionshipRank,  -- Rank of each archer within the championship based on total score
     FirstName,
     LastName,
-    ChampionshipTotalScore
+    ChampionshipTotalScore  -- Total score for each archer across all competitions that belong to the championship
 FROM RankedChampionship
 ORDER BY
     Year DESC,
